@@ -7,9 +7,10 @@ import path from "path";
 import fs from "fs";
 import cors from "cors";
 
-// types/interfaces
-import { credentials } from "./types/credentials";
+// types/interfaces/components
 import { scopes } from "./components/scopes";
+import { credentials } from "./types/credentials";
+import { getTopXQuery } from "./types/getTopXQuery";
 
 // init server
 const app = express();
@@ -35,10 +36,6 @@ let spotifyApi = new spotifyWebApi(creds);
 //// login route, send back url that gets access and refresh tokens
 app.get('/', (req, res) => {
     res.send('<h1>Hello!</h1>');
-});
-
-app.get('/success', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'success.html'));
 });
 
 app.get('/getKey', (req, res) => {
@@ -100,4 +97,37 @@ app.get('/callback', (req, res) => {
             res.send(obj);
         });   
     };
+});
+
+//// get top x route
+app.get('/gettopx', async (req, res) => {
+    const firstRes = res;
+    if (req.query.access_token && req.query.request_type && req.query.time_range && req.query.limit && req.query.offset) {
+        try {
+            const params: getTopXQuery = {
+                access_token: req.query.access_token as string,
+                request_type: req.query.request_type as string,
+                time_range: req.query.time_range as string,
+                limit: req.query.limit as string, 
+                offset: req.query.offset as string, 
+            }
+            const headers = { 
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.access_token, 
+            };
+            const url = 'https://api.spotify.com/v1/me/top/' + params.request_type + '?time_range=' + params.time_range + '&limit=' + params.limit + '&offset=' + params.offset;
+            await fetch(url, { headers: headers })
+                .then(res => res.json())
+                    .then(data => firstRes.send(data))
+                    .catch(err => res.send(err))
+                .catch(err => res.send(err));
+        }
+        catch(err) {
+            res.send(err);
+        }
+    }
+    else {
+        res.send({ "code": "400", "error": "Invalid Request" });
+    }
 });

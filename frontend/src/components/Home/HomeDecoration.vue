@@ -33,7 +33,7 @@ export default defineComponent({
         const access_token: Ref<string | null> = ref(sessionStorage.access_token as string ?? null);
         const refresh_token: Ref<string | null> = ref(sessionStorage.refresh_token as string ?? null);
         try {
-            // try catch needs to be accessible outside of this block
+            // user ref needs to be accessible outside of this block
             var user = ref(JSON.parse(sessionStorage.user));
         }
         catch {

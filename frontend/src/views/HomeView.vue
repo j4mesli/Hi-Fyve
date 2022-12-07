@@ -1,18 +1,33 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <h1>Hi-Fyve</h1>
+    <HomeDecorationVue />
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+<script lang="ts">
+import HomeDecorationVue from "@/components/Home/HomeDecoration.vue";
+import { defineComponent, ref } from "vue";
 
-export default {
-  name: 'HomeView',
+export default defineComponent({
+  props: {
+
+  },
   components: {
-    HelloWorld
-  }
-}
+    HomeDecorationVue,
+  },
+  setup() {
+      return {  };
+  },
+})
 </script>
+
+<style>
+#app {
+  font-family: 'Figtree','Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #f3f3f3;
+}
+</style>

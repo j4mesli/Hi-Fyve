@@ -11,6 +11,7 @@ import cors from "cors";
 import { scopes } from "./components/scopes";
 import { credentials } from "./types/credentials";
 import { getTopXQuery } from "./types/getTopXQuery";
+import { getMyInfo } from "./types/getMyInfo";
 
 // init server
 const app = express();
@@ -33,16 +34,11 @@ let creds: credentials = {
 let spotifyApi = new spotifyWebApi(creds);
 
 // routes
-//// login route, send back url that gets access and refresh tokens
-app.get('/', (req, res) => {
-    res.send('<h1>Hello!</h1>');
-});
-
-app.get('/getKey', (req, res) => {
+//// gets authorization URL for frontend to open
+app.get('/getURL', (req, res) => {
     let obj = {};
     obj = Object.assign({'url': spotifyApi.createAuthorizeURL(scopes, state)}, obj);
     res.send(obj);
-    // res.redirect(spotifyApi.createAuthorizeURL(scopes, state));
 });
 
 //// callback route
@@ -78,7 +74,7 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({'expires_in': expires_in}, obj);
             obj = Object.assign({'data': data}, obj);
     
-            // refreshes token, may be impractical to implement
+            // refreshes token, CREATE NEW ROUTE TO HANDLE
         //   setInterval(async () => {
         //     const data = await spotifyApi.refreshAccessToken();
         //     const access_token = data.body['access_token'];
@@ -97,6 +93,37 @@ app.get('/callback', (req, res) => {
             res.send(obj);
         });   
     };
+});
+
+//// refresh user token
+app.get('/refresh', (req, res) => {
+
+});
+
+//// get user info
+app.get('/me', async (req, res) => {
+    const firstRes = res;
+    if (req.query.access_token) {
+        try {
+            const params: getMyInfo = {
+                access_token: req.query.access_token as string,
+            }
+            const headers = { 
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.access_token, 
+            };
+            const url = 'https://api.spotify.com/v1/me';
+            await fetch(url, { headers: headers })
+                .then(res => res.json())
+                    .then(data => firstRes.send(data))
+                    .catch(err => res.send(err))
+                .catch(err => res.send(err));
+        }
+        catch(err) {
+            res.send(err);
+        }
+    }
 });
 
 //// get top x route

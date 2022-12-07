@@ -1,5 +1,5 @@
 <template>
-    <h1>About</h1>
+    <h1>Get Recommended</h1>
 </template>
 
 <script lang="ts">

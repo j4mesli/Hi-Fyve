@@ -41,15 +41,11 @@ let creds = {
 };
 let spotifyApi = new spotify_web_api_node_1.default(creds);
 // routes
-//// login route, send back url that gets access and refresh tokens
-app.get('/', (req, res) => {
-    res.send('<h1>Hello!</h1>');
-});
-app.get('/getKey', (req, res) => {
+//// gets authorization URL for frontend to open
+app.get('/getURL', (req, res) => {
     let obj = {};
     obj = Object.assign({ 'url': spotifyApi.createAuthorizeURL(scopes_1.scopes, state) }, obj);
     res.send(obj);
-    // res.redirect(spotifyApi.createAuthorizeURL(scopes, state));
 });
 //// callback route
 app.get('/callback', (req, res) => {
@@ -82,7 +78,7 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({ 'refresh_token': refresh_token }, obj);
             obj = Object.assign({ 'expires_in': expires_in }, obj);
             obj = Object.assign({ 'data': data }, obj);
-            // refreshes token, may be impractical to implement
+            // refreshes token, CREATE NEW ROUTE TO HANDLE
             //   setInterval(async () => {
             //     const data = await spotifyApi.refreshAccessToken();
             //     const access_token = data.body['access_token'];
@@ -101,6 +97,34 @@ app.get('/callback', (req, res) => {
     }
     ;
 });
+//// refresh user token
+app.get('/refresh', (req, res) => {
+});
+//// get user info
+app.get('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const firstRes = res;
+    if (req.query.access_token) {
+        try {
+            const params = {
+                access_token: req.query.access_token,
+            };
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.access_token,
+            };
+            const url = 'https://api.spotify.com/v1/me';
+            yield fetch(url, { headers: headers })
+                .then(res => res.json())
+                .then(data => firstRes.send(data))
+                .catch(err => res.send(err))
+                .catch(err => res.send(err));
+        }
+        catch (err) {
+            res.send(err);
+        }
+    }
+}));
 //// get top x route
 app.get('/gettopx', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const firstRes = res;

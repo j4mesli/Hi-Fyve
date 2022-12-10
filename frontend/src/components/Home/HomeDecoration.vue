@@ -1,44 +1,61 @@
 <template>
+    <h2 class="title">Let's take Fyve. 🔥</h2>
     <div class="panel">
+        <LoadingSpinnerVue v-if="!loaded" />
         <h5 class="error" v-if="error">{{ error }}</h5>
-        <h1 v-if="hasTokens">Hello, {{ user.display_name }}!</h1>
-        <h1 v-else>Let's Get Started</h1>
-        <button v-if="!hasTokens" @click="login">
+        <h1 class="hello" v-if="hasTokens">Hello, {{ user.display_name }}!</h1>
+        <h1 v-else>Let's Get Started<br><span>Log in with Spotify to continue!</span></h1>
+        <button v-if="(!hasTokens && !spinner)" @click="login">
             <div class="logo">
                 <img src="../../../public/spotify_logo.png">
             </div>
             <p class="button">Connect With Spotify</p>
         </button>
-        <div class="profile" v-else>
+        <div class="profile" v-else-if="(hasTokens && !spinner)">
             <div class="nested">
                 <div class="logo" :style="`background-image: url(${user.images[0].url})`"></div>
             </div>
             <p>Logged in as <strong>{{ user.id }}</strong></p>
             <p class="email">({{ user.email }})</p>
-            <button><h3>Hi-Fyve!</h3></button>
+            <button @click="$router.push({ name: 'MyHiFyve' })"><h3>Hi-Fyve!</h3></button>
             <div class="nested">
                 <p class="signout">Not you? <br><a @click="logout">Log out!</a></p>
             </div>
         </div>
+        <LoadingSpinnerVue v-else/>
+        <div class="synced">
+            <img src="../../../public/powered_by_spotify.png">
+        </div>
+        <HomeInfoSectionVue />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, Ref, ref } from 'vue'
+import { refreshAccessToken } from '../functions/refreshAccessToken';
+import LoadingSpinnerVue from '@/components/LoadingSpinnerVue.vue';
+import HomeInfoSectionVue from './HomeInfoSection.vue';
 
 export default defineComponent({
+    components: {
+        LoadingSpinnerVue,
+        HomeInfoSectionVue,
+    },
     setup() {
         // property refs
+        const loaded = ref(false);
         const error = ref(null);
+        const spinner = ref(false);
         const access_token: Ref<string | null> = ref(sessionStorage.access_token as string ?? null);
         const refresh_token: Ref<string | null> = ref(sessionStorage.refresh_token as string ?? null);
         try {
-            // user ref needs to be accessible outside of this block
+            // try catch needs to be accessible outside of this block
             var user = ref(JSON.parse(sessionStorage.user));
         }
         catch {
             user = ref({ images: [{ url: '' }] });
         }
+
         // show/hide login button
         const hasTokens = ref(false);
         if (sessionStorage.length !== 0) {
@@ -50,7 +67,8 @@ export default defineComponent({
 
         // login function
         const login = async () => {
-        await fetch('http://localhost:3000/getURL')
+            spinner.value = true;
+            await fetch('http://localhost:3000/getURL')
             .then(res => {
                 return res.json();
             })
@@ -63,17 +81,26 @@ export default defineComponent({
 
         // get user info function
         const getUserInfo = async () => {
-            await fetch('http://localhost:3000/me?access_token=' + access_token.value)
-                .then(res => {return res.json()})
+            await fetch('http://localhost:3000/me?access_token=' + sessionStorage.access_token)
+                .then(res => { return res.json(); })
                     .then(data => {
                         user.value = data;
                         sessionStorage.setItem("user", JSON.stringify(user.value));
                     })
                     .catch(err => error.value = err)
-                .catch(err => error.value = err);
+                .catch(err => {
+                    if (err.body.status === 401 as number | string) {
+                        refreshAccessToken(sessionStorage.refresh_token);
+                        getUserInfo();
+                    }
+                    else {
+                        error.value = err;
+                    }
+                });
         };
 
         onMounted(async () => {
+            loaded.value = true;
             // check for headers
             if (window.location.search) {
                 // if query found, sets code and state refs from url query and clears url query
@@ -90,6 +117,7 @@ export default defineComponent({
                     sessionStorage.setItem("refresh_token", refresh_token.value);
                     await getUserInfo();
                     hasTokens.value = true;
+                    spinner.value = false;
                 }
             }
         });
@@ -105,12 +133,35 @@ export default defineComponent({
             setTimeout(() => spotifyLogoutWindow?.close(), 1000);
         };
 
-        return { error, hasTokens, login, logout, getUserInfo, access_token, refresh_token, user };
+        return { error, hasTokens, login, logout, getUserInfo, access_token, refresh_token, user, spinner, loaded };
     },
 })
 </script>
 
 <style scoped>
+.synced {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+    margin: 60px auto auto auto;
+    padding: 10px 30px;
+    width: 300px;
+    height: 90px;
+    border-radius: 40px;
+}
+h1.hello {
+    margin-top: 80px;
+}
+h2.title {
+    color: #e47d41;
+    font-size: 28px;
+    margin: 20px;
+}
+span {
+    font-size: 16px;
+    font-weight: 500;
+}
 .profile button {
     padding: 0 40px;
     color: #f3f3f3;
@@ -194,7 +245,7 @@ button:hover {
 }
 p.button {
     font-family: 'Avenir', sans-serif;
-    background-image: linear-gradient(to top right, rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(33,33,33,0.8));
+    background-image: var(--home-panel-sync-button);
     background-clip: text;
     color: transparent;
     background-size: 400%;
@@ -202,7 +253,7 @@ p.button {
     font-size: 1rem;
 }
 p.button:hover {
-    background-image: linear-gradient(to top right, rgba(33,33,33,0.9), rgba(18,18,18,0.9), rgba(33,33,33,0.9));
+    background-image: var(--home-panel-sync-button-hover);
 }
 .error {
     color: #cc3300;
@@ -211,24 +262,24 @@ p.button:hover {
     font-size: 40px;
 }
 .panel {
-    background-image: linear-gradient(to top right, rgba(29,185,84,0.8), rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(83,83,83,0.8), rgba(179,179,179,0.8));
-    margin: 50px auto auto auto;
+    background-image: var(--home-panel);
+    margin: auto auto 40px auto;
     width: 90%;
-    height: 600px;
+    min-height: 600px;
     border-radius: 40px;
     background-position: left;
     transition: 0.5s ease-in-out;
     animation: bg-animation 30s infinite alternate;
     background-size: 400%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     align-items: center;
     flex-direction: column;
 }
 .panel:hover{ 
     width: 94%;
-    height: 605px;
-    background-image: linear-gradient(to top right, rgba(29,185,84,0.8), rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(83,83,83,0.8), rgba(179,179,179,0.8));
+    min-height: 605px;
+    background-image: var(--home-panel-hover);
     background-position: right;
     box-shadow: 0 -2px 10px 10px rgb(58, 58, 58);
 }

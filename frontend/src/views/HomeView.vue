@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <h1>Hi-Fyve</h1>
     <HomeDecorationVue />
   </div>
 </template>
@@ -29,5 +28,6 @@ export default defineComponent({
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #f3f3f3;
+  
 }
 </style>

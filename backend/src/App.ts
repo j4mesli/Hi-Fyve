@@ -73,17 +73,6 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({'refresh_token': refresh_token}, obj);
             obj = Object.assign({'expires_in': expires_in}, obj);
             obj = Object.assign({'data': data}, obj);
-    
-            // refreshes token, CREATE NEW ROUTE TO HANDLE
-        //   setInterval(async () => {
-        //     const data = await spotifyApi.refreshAccessToken();
-        //     const access_token = data.body['access_token'];
-    
-        //     console.log('The access token has been refreshed!');
-        //     console.log('access_token:', access_token);
-        //     spotifyApi.setAccessToken(access_token);
-        //     res.send(obj);
-        //   }, expires_in / 2 * 1000);
 
             const query: string = '?access_token=' + access_token + '&refresh_token=' + refresh_token;
             res.redirect('http://localhost:8080/' + query);
@@ -96,8 +85,26 @@ app.get('/callback', (req, res) => {
 });
 
 //// refresh user token
-app.get('/refresh', (req, res) => {
-
+app.get('/refresh', async (req, res) => {
+    const firstRes = res;
+    if (req.query.refresh_token) {
+        try {
+            const refreshCall = new spotifyWebApi({ clientId: creds.clientId, clientSecret: creds.clientSecret });
+            refreshCall.setRefreshToken(req.query.refresh_token as string);
+            await spotifyApi.refreshAccessToken()
+                .then((res: any) => {
+                    const data: Object = {
+                        access_token: res.body.access_token,
+                        refresh_token: res.body.refresh_token,
+                    };
+                    firstRes.send(data);
+                })
+                .catch(err => firstRes.send(err));
+        }
+        catch(err) {
+            res.send(err);
+        }
+    }
 });
 
 //// get user info
@@ -156,5 +163,21 @@ app.get('/gettopx', async (req, res) => {
     }
     else {
         res.send({ "code": "400", "error": "Invalid Request" });
+    }
+});
+
+//// get genre: color .json
+app.get('/colors', async (req, res) => {
+    try {
+        const location: string = path.join(__dirname, '..', 'json', 'genre-color.json');
+        res.header("Content-Type",'application/json');
+        res.sendFile(location);
+    }
+    catch(err) {
+        const error: { error: string, code: number | string } = {
+            "error": err as string, 
+            "code": 404,
+        } 
+        res.send(error);
     }
 });

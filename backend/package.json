@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "start": "nodemon ./public/app.js & tsc -w"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

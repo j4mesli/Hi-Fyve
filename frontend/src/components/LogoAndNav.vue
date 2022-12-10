@@ -12,8 +12,9 @@
             <router-link to="/Worldwyde">Worldwyde</router-link>
         </nav>
         <span v-else class="material-symbols-outlined" @click="updateMenu" :class="{ active: hideShowMenu }">{{menuOpenClose}}</span>
+        <span v-if="(width > 1250)" class="material-symbols-outlined" @click="updateMenu" :class="{ active: hideShowMenu }">{{navOpenClose}}</span>
     </header>
-    <div class="slideInMenu" v-if="(hideShowMenu && width < 1250)" @click="(hideShowMenu = !hideShowMenu)">
+    <div class="slideInMenu" v-if="(hideShowMenu && width < 1250)" @click="updateMenu">
         <ul>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/"><li>Home</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/About"><li>About</li></router-link></div>
@@ -33,18 +34,29 @@ export default defineComponent({
         // resize window
         const width = ref(window.innerWidth);
         window.addEventListener('resize', () => {
-            width.value = window.innerWidth
+            width.value = window.innerWidth;
         })
         
+        // hide or show nav
+        const showNav = ref(true);
+
         // hide or show side menu
         const hideShowMenu = ref(false);
         const menuOpenClose = ref('menu');
+        const navOpenClose = ref('close');
         const updateMenu = () => {
-            hideShowMenu.value = !hideShowMenu.value;
-            menuOpenClose.value = hideShowMenu.value ? 'close' : 'menu';
+            if (window.innerWidth > 1250) {
+                showNav.value = !showNav.value; 
+                navOpenClose.value = showNav.value ? 'close' : 'menu';
+                document.querySelector('nav')?.classList.toggle('fade');
+            }
+            else {
+                hideShowMenu.value = !hideShowMenu.value;
+                menuOpenClose.value = hideShowMenu.value ? 'close' : 'menu';
+            }
         }
 
-        return { width, hideShowMenu, menuOpenClose, updateMenu };
+        return { width, hideShowMenu, menuOpenClose, navOpenClose, updateMenu, showNav };
     },
 })
 </script>
@@ -53,9 +65,14 @@ export default defineComponent({
 .slideInMenu{
     width: 100%;
     position: absolute;
+    height: 110%;
     left: 50%;
     transform: translate(-50%);
-    margin-top: -16px;
+    margin-top: 8px;
+    background: #212121;
+}
+.fade {
+    opacity: 0%;
 }
 header {
     opacity: 80%;
@@ -64,7 +81,8 @@ header {
     font-size: 15px;
     padding: 5px 10px;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
+    align-items: center;
     border-radius: 20px;
 }
 .logo {
@@ -76,6 +94,8 @@ img {
     height: 100%;
 }
 nav {
+    transition: .25s ease-in-out;
+    opacity: 80%;
     display: flex;
     justify-content: space-between;
     align-items: center;

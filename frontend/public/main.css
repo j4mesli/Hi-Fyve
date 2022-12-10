@@ -10,3 +10,27 @@
         background-position: right;
     }
 }
+:root {
+    --tamagotchi: linear-gradient(to top right, rgb(196, 151, 29), rgb(131, 44, 29), rgb(32, 21, 211));
+    --info-text-synesthesia: linear-gradient(to top right, rgb(228, 72, 25),rgb(252, 208, 62), rgb(199, 73, 211));
+    --rengoku: linear-gradient(to top right, #fa4d0a, #e25822, #e47d41);
+    --home-panel: linear-gradient(to top right, rgba(29,185,84,0.8), rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(83,83,83,0.8), rgba(179,179,179,0.8));
+    --home-panel-hover: linear-gradient(to top right, rgba(29,185,84,0.9), rgba(33,33,33,0.9), rgba(18,18,18,0.9), rgba(83,83,83,0.9), rgba(179,179,179,0.9));
+    --home-panel-sync-button: linear-gradient(to top right, rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(33,33,33,0.8));
+    --home-panel-sync-button-hover: linear-gradient(to top right, rgba(33,33,33,0.9), rgba(18,18,18,0.9), rgba(33,33,33,0.9));
+    --hi-fyve-wrapper: linear-gradient(to top right, rgba(255, 0, 0, 0.8), rgba(255, 165, 0, 0.8), rgba(255, 255, 0, 0.8), rgba(255, 0, 255, 0.8), rgba(255, 192, 203, 0.8));
+}
+html, body {
+    padding: 2px 0;
+    margin: 0;
+}
+body {
+    min-height: 100%;
+}
+html {
+    -ms-overflow-style: none; 
+    scrollbar-width: none;
+}
+.container::-webkit-scrollbar { 
+    display: none;
+}

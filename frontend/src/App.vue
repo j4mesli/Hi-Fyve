@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import LogoAndNavVue from './components/LogoAndNav.vue';
 
 export default defineComponent({
@@ -12,11 +12,8 @@ export default defineComponent({
     LogoAndNavVue,
   },
   setup() {
-    // tokens
-    const access_token = ref(null);
-    const refresh_token = ref(null);
     
-    return { access_token, refresh_token };
+    return {  };
   },
 })
 </script>
@@ -30,7 +27,6 @@ export default defineComponent({
 }
 html {
   background-image: linear-gradient(to top right, #212121, #191414, #212121);
-  height: 100%;
   scroll-behavior: smooth;
   background-size: 400%;
   animation: bg-animation 60s infinite alternate;

@@ -78,15 +78,6 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({ 'refresh_token': refresh_token }, obj);
             obj = Object.assign({ 'expires_in': expires_in }, obj);
             obj = Object.assign({ 'data': data }, obj);
-            // refreshes token, CREATE NEW ROUTE TO HANDLE
-            //   setInterval(async () => {
-            //     const data = await spotifyApi.refreshAccessToken();
-            //     const access_token = data.body['access_token'];
-            //     console.log('The access token has been refreshed!');
-            //     console.log('access_token:', access_token);
-            //     spotifyApi.setAccessToken(access_token);
-            //     res.send(obj);
-            //   }, expires_in / 2 * 1000);
             const query = '?access_token=' + access_token + '&refresh_token=' + refresh_token;
             res.redirect('http://localhost:8080/' + query);
         })
@@ -98,8 +89,27 @@ app.get('/callback', (req, res) => {
     ;
 });
 //// refresh user token
-app.get('/refresh', (req, res) => {
-});
+app.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const firstRes = res;
+    if (req.query.refresh_token) {
+        try {
+            const refreshCall = new spotify_web_api_node_1.default({ clientId: creds.clientId, clientSecret: creds.clientSecret });
+            refreshCall.setRefreshToken(req.query.refresh_token);
+            yield spotifyApi.refreshAccessToken()
+                .then((res) => {
+                const data = {
+                    access_token: res.body.access_token,
+                    refresh_token: res.body.refresh_token,
+                };
+                firstRes.send(data);
+            })
+                .catch(err => firstRes.send(err));
+        }
+        catch (err) {
+            res.send(err);
+        }
+    }
+}));
 //// get user info
 app.get('/me', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const firstRes = res;
@@ -155,5 +165,20 @@ app.get('/gettopx', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     else {
         res.send({ "code": "400", "error": "Invalid Request" });
+    }
+}));
+//// get genre: color .json
+app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const location = path_1.default.join(__dirname, '..', 'json', 'genre-color.json');
+        res.header("Content-Type", 'application/json');
+        res.sendFile(location);
+    }
+    catch (err) {
+        const error = {
+            "error": err,
+            "code": 404,
+        };
+        res.send(error);
     }
 }));

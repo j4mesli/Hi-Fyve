@@ -1,13 +1,29 @@
 <template>
-    <h1>Get Top</h1>
+    <showIfLoggedInVue v-if="showHide"/>
+    <showIfLoggedOutVue v-else />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
+import showIfLoggedInVue from '@/components/Hi-Fyve/showIfLoggedIn.vue';
+import showIfLoggedOutVue from '@/components/Hi-Fyve/showIfLoggedOut.vue';
 
 export default defineComponent({
+    components: {
+        showIfLoggedInVue, 
+        showIfLoggedOutVue,
+    },
     setup() {
-        return {  };
+        const showHide = ref(false);
+        switch (sessionStorage.length) {
+            case 0:
+                showHide.value = false;
+                break;
+            default:
+                showHide.value = true;
+                break;
+        }
+        return { showHide };
     },
 })
 </script>

@@ -26,9 +26,8 @@ export default defineComponent({
   text-align: center;
 }
 html {
-  background-image: linear-gradient(to top right, #212121, #191414, #212121);
+  background: #212121;
   scroll-behavior: smooth;
   background-size: 400%;
-  animation: bg-animation 60s infinite alternate;
 }
 </style>

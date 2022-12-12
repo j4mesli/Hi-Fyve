@@ -70,6 +70,7 @@ export default defineComponent({
     transform: translate(-50%);
     margin-top: 8px;
     background: #212121;
+    z-index: 1;
 }
 .fade {
     opacity: 0%;
@@ -107,7 +108,7 @@ nav a, li, span {
     font-weight: bold;
     padding: 10px 20px;
     border-radius: 20px;
-    transition: .15s ease-in-out;
+    transition: .05s ease-in-out;
     background-color: rgba(89,89,89,0);
 }
 li {

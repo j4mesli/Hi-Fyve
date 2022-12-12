@@ -12,6 +12,7 @@ import { scopes } from "./components/scopes";
 import { credentials } from "./types/credentials";
 import { getTopXQuery } from "./types/getTopXQuery";
 import { getMyInfo } from "./types/getMyInfo";
+import colors from "./json/genre-color.json";
 
 // init server
 const app = express();
@@ -88,6 +89,7 @@ app.get('/callback', (req, res) => {
 app.get('/refresh', async (req, res) => {
     const firstRes = res;
     if (req.query.refresh_token) {
+        const refresh_token = req.query.refresh_token;
         try {
             const refreshCall = new spotifyWebApi({ clientId: creds.clientId, clientSecret: creds.clientSecret });
             refreshCall.setRefreshToken(req.query.refresh_token as string);
@@ -95,7 +97,7 @@ app.get('/refresh', async (req, res) => {
                 .then((res: any) => {
                     const data: Object = {
                         access_token: res.body.access_token,
-                        refresh_token: res.body.refresh_token,
+                        refresh_token: refresh_token,
                     };
                     firstRes.send(data);
                 })
@@ -166,18 +168,42 @@ app.get('/gettopx', async (req, res) => {
     }
 });
 
+//// get artist tracks
+app.get('/getTopTracks', async (req, res) => {
+    if (req.query.id && req.query.access_token) {
+        const firstRes = res;
+        const url = 'https://api.spotify.com/v1/artists/' + req.query.id + '/top-tracks?market=US';
+        const headers = { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token, 
+        };
+        await fetch(url, { headers: headers })
+            .then(res => res.json())
+                .then(data => firstRes.send(data))
+                .catch(err => res.send(err))
+            .catch(err => res.send(err));
+    }
+});
+
 //// get genre: color .json
 app.get('/colors', async (req, res) => {
-    try {
-        const location: string = path.join(__dirname, '..', 'json', 'genre-color.json');
-        res.header("Content-Type",'application/json');
-        res.sendFile(location);
+    if (req.query.genre) {
+        const genre = req.query.genre as string;
+        res.send({ color: colors[genre as keyof typeof colors] });
     }
-    catch(err) {
-        const error: { error: string, code: number | string } = {
-            "error": err as string, 
-            "code": 404,
-        } 
-        res.send(error);
+    else {
+        try {
+            const location: string = path.join(__dirname, '..', 'json', 'genre-color.json');
+            res.header("Content-Type",'application/json');
+            res.sendFile(location);
+        }
+        catch(err) {
+            const error: { error: string, code: number | string } = {
+                "error": err as string, 
+                "code": 404,
+            } 
+            res.send(error);
+        }
     }
 });

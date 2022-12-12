@@ -22,6 +22,7 @@ const fs_1 = __importDefault(require("fs"));
 const cors_1 = __importDefault(require("cors"));
 // types/interfaces/components
 const scopes_1 = require("./components/scopes");
+const genre_color_json_1 = __importDefault(require("./json/genre-color.json"));
 // init server
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -92,6 +93,7 @@ app.get('/callback', (req, res) => {
 app.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const firstRes = res;
     if (req.query.refresh_token) {
+        const refresh_token = req.query.refresh_token;
         try {
             const refreshCall = new spotify_web_api_node_1.default({ clientId: creds.clientId, clientSecret: creds.clientSecret });
             refreshCall.setRefreshToken(req.query.refresh_token);
@@ -99,7 +101,7 @@ app.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                 .then((res) => {
                 const data = {
                     access_token: res.body.access_token,
-                    refresh_token: res.body.refresh_token,
+                    refresh_token: refresh_token,
                 };
                 firstRes.send(data);
             })
@@ -167,18 +169,41 @@ app.get('/gettopx', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.send({ "code": "400", "error": "Invalid Request" });
     }
 }));
+//// get artist tracks
+app.get('/getTopTracks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.id && req.query.access_token) {
+        const firstRes = res;
+        const url = 'https://api.spotify.com/v1/artists/' + req.query.id + '/top-tracks?market=US';
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token,
+        };
+        yield fetch(url, { headers: headers })
+            .then(res => res.json())
+            .then(data => firstRes.send(data))
+            .catch(err => res.send(err))
+            .catch(err => res.send(err));
+    }
+}));
 //// get genre: color .json
 app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const location = path_1.default.join(__dirname, '..', 'json', 'genre-color.json');
-        res.header("Content-Type", 'application/json');
-        res.sendFile(location);
+    if (req.query.genre) {
+        const genre = req.query.genre;
+        res.send({ color: genre_color_json_1.default[genre] });
     }
-    catch (err) {
-        const error = {
-            "error": err,
-            "code": 404,
-        };
-        res.send(error);
+    else {
+        try {
+            const location = path_1.default.join(__dirname, '..', 'json', 'genre-color.json');
+            res.header("Content-Type", 'application/json');
+            res.sendFile(location);
+        }
+        catch (err) {
+            const error = {
+                "error": err,
+                "code": 404,
+            };
+            res.send(error);
+        }
     }
 }));

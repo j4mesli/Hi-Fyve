@@ -46,6 +46,7 @@ export default defineComponent({
         const loaded = ref(false);
         const error = ref(null);
         const spinner = ref(false);
+        const colors = ref(null);
         const access_token: Ref<string | null> = ref(sessionStorage.access_token as string ?? null);
         const refresh_token: Ref<string | null> = ref(sessionStorage.refresh_token as string ?? null);
         try {
@@ -99,6 +100,19 @@ export default defineComponent({
                 });
         };
 
+        // get genre: color pairs
+        const getColors = async () => {
+            // get all color pairs
+            await fetch('http://localhost:3000/colors')
+                .then(res => { return res.json() })
+                    .then(data => {
+                        colors.value = data;
+                        sessionStorage.setItem("colors", JSON.stringify(user.value));
+                    })
+                    .catch(err => console.log(err))
+                .catch(err => console.log(err));
+        }
+
         onMounted(async () => {
             loaded.value = true;
             // check for headers
@@ -116,6 +130,7 @@ export default defineComponent({
                     sessionStorage.setItem("access_token", access_token.value);
                     sessionStorage.setItem("refresh_token", refresh_token.value);
                     await getUserInfo();
+                    await getColors();
                     hasTokens.value = true;
                     spinner.value = false;
                 }
@@ -129,8 +144,10 @@ export default defineComponent({
             access_token.value = null;
             refresh_token.value = null;
             user.value = { images: [{ url: '' }] };
-            const spotifyLogoutWindow = window.open('https://accounts.spotify.com/en/logout', 'Spotify Logout', 'width=700,height=500,top=40,left=40')                                                                                                
-            setTimeout(() => spotifyLogoutWindow?.close(), 1000);
+
+            // this signs the user out of Spotify, may not be necessary to implement
+            // const spotifyLogoutWindow = window.open('https://accounts.spotify.com/en/logout', 'Spotify Logout', 'width=700,height=500,top=40,left=40')                                                                                                
+            // setTimeout(() => spotifyLogoutWindow?.close(), 1000);
         };
 
         return { error, hasTokens, login, logout, getUserInfo, access_token, refresh_token, user, spinner, loaded };
@@ -139,6 +156,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
+
 .synced {
     display: flex;
     align-items: center;
@@ -264,7 +282,7 @@ p.button:hover {
 .panel {
     background-image: var(--home-panel);
     margin: auto auto 40px auto;
-    width: 90%;
+    width: 94%;
     min-height: 600px;
     border-radius: 40px;
     background-position: left;
@@ -278,10 +296,13 @@ p.button:hover {
 }
 .panel:hover{ 
     width: 94%;
-    min-height: 605px;
     background-image: var(--home-panel-hover);
-    background-position: right;
     box-shadow: 0 -2px 10px 10px rgb(58, 58, 58);
+}
+@media (max-width: 1800px) { 
+    .panel {
+        width: 90%;
+    }
 }
 @media (max-width: 1250px) {
     .panel {

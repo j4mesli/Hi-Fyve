@@ -48,7 +48,7 @@ export default defineComponent({
 .Hi-Fyve-Content-wrapper {
     background-image: var(--hi-fyve-wrapper);
     margin: 20px auto;
-    width: 90%;
+    width: 95%;
     min-height: 600px;
     border-radius: 40px;
     background-position: left;
@@ -65,7 +65,11 @@ export default defineComponent({
     width: 95%;
     box-shadow: 0 -2px 10px 10px rgb(58, 58, 58);
 }
-
+@media (max-width: 1800px) {
+    .Hi-Fyve-Content-wrapper {
+        width: 90%;
+    }
+}
 @media (max-width: 1250px) {
     .Hi-Fyve-Content { 
         width: 80%;

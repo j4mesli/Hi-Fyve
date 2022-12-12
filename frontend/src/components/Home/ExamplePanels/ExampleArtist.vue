@@ -34,13 +34,13 @@ span {
     border-radius: 10px;
     min-width: 300px;
     height: 500px;
-    background-image: var(--tamagotchi);
-    animation: bg-animation 30s infinite alternate;
-    background-size: 400%;
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-direction: column;
+    background-size: 400%;
+    background-image: var(--tamagotchi);
+    animation: bg-animation 15s infinite alternate;
 }
 .pfp {
     margin: 0;

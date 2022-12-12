@@ -12,8 +12,9 @@
 }
 :root {
     --tamagotchi: linear-gradient(to top right, rgb(196, 151, 29), rgb(131, 44, 29), rgb(32, 21, 211));
-    --info-text-synesthesia: linear-gradient(to top right, rgb(228, 72, 25),rgb(252, 208, 62), rgb(199, 73, 211));
+    --info-text-synesthesia: linear-gradient(to top right, rgb(228, 72, 25),rgb(231, 187, 43), rgb(199, 73, 211));
     --rengoku: linear-gradient(to top right, #fa4d0a, #e25822, #e47d41);
+    --rengoku-static: #e25822;
     --home-panel: linear-gradient(to top right, rgba(29,185,84,0.8), rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(83,83,83,0.8), rgba(179,179,179,0.8));
     --home-panel-hover: linear-gradient(to top right, rgba(29,185,84,0.9), rgba(33,33,33,0.9), rgba(18,18,18,0.9), rgba(83,83,83,0.9), rgba(179,179,179,0.9));
     --home-panel-sync-button: linear-gradient(to top right, rgba(33,33,33,0.8), rgba(18,18,18,0.8), rgba(33,33,33,0.8));

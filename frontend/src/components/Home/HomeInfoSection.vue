@@ -64,6 +64,10 @@ export default defineComponent({
 
 <style scoped>
 .rengoku {
+    color: var(--rengoku-static);
+}
+/*
+.rengoku {
     background-image: var(--rengoku);
     background-position: left;
     background-size: 400%;
@@ -71,6 +75,7 @@ export default defineComponent({
     background-clip: text;
     color: transparent;
 }
+*/
 span {
     background-image: var(--info-text-synesthesia);
     background-position: left;
@@ -95,7 +100,6 @@ span {
     flex-direction: column;
 }
 .block {
-    border: 1px solid red;
     margin: 180px auto 60px auto;
     display: flex;
     justify-content: space-around;

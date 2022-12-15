@@ -3,28 +3,28 @@
         <div class="type-selector">
             <span id="go-back" @click="toggleClicks ? goBack() : ''" class="material-symbols-outlined" :class="{ off: item === 'Artists' || !toggleClicks }">chevron_left</span>
             <h2>Your Top {{ item }}</h2>
-            <span id="go-forward" @click="toggleClicks ? goForward() : ''" class="material-symbols-outlined" :class="{ off: item === 'Playlists' || !toggleClicks }">chevron_right</span>
+            <span id="go-forward" @click="toggleClicks ? goForward() : ''" class="material-symbols-outlined" :class="{ off: item === 'Tracks' || !toggleClicks }">chevron_right</span>
         </div>
         <nav :class="{ 'off': !toggleClicks }">
             <a @click="toggleClicks ? timeframe = 'short_term' : ''" :class="{ active: timeframe === 'short_term', off: !toggleClicks }"><h3>1 Month</h3></a>
             <a @click="toggleClicks ? timeframe = 'medium_term' : ''" :class="{ active: timeframe === 'medium_term', off: !toggleClicks }"><h3>6 Months</h3></a>
             <a @click="toggleClicks ? timeframe = 'long_term' : ''" :class="{ active: timeframe === 'long_term', off: !toggleClicks }"><h3>All Time</h3></a>
         </nav>
-        <TopPlaylistsVue :item="item.toLowerCase()" :timeframe="timeframe" v-if="item === 'Playlists'" />
-        <TopArtistsVue @allowClicks="allowClicks" :item="item.toLowerCase()" :timeframe="timeframe" v-else-if="item === 'Artists'" />
-        <TopTracksVue :item="item.toLowerCase()" :timeframe="timeframe" v-else-if="item === 'Tracks'" />
+        <!-- <TopRecommendationsVue @allowClicks="allowClicks" :item="item.toLowerCase()" :timeframe="timeframe" v-if="item === 'Recommendations'" /> -->
+        <TopArtistsVue @allowClicks="allowClicks" :item="item.toLowerCase()" :timeframe="timeframe" v-if="item === 'Artists'" />
+        <TopTracksVue @allowClicks="allowClicks" :item="item.toLowerCase()" :timeframe="timeframe" v-else-if="item === 'Tracks'" />
     </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import TopPlaylistsVue from './TopPlaylists.vue';
+// import TopRecommendationsVue from './TopRecommendations.vue';
 import TopArtistsVue from './TopArtists.vue';
 import TopTracksVue from './TopTracks.vue';
 
 export default defineComponent({
     components: {
-        TopPlaylistsVue,
+        // TopRecommendationsVue,
         TopArtistsVue,
         TopTracksVue,
     },
@@ -37,12 +37,8 @@ export default defineComponent({
         const toggleClicks = ref(false);
         // methods
         const goBack = () => {
-            if (item.value !== 'Artists' && toggleClicks) {
+            if (toggleClicks.value) {
                 switch (item.value) {
-                    case 'Playlists':
-                        item.value = 'Tracks';
-                        colors.value = 'var(--rengoku)';
-                        break;
                     case 'Tracks':
                         item.value = 'Artists';
                         colors.value = 'var(--info-text-synesthesia)';
@@ -51,15 +47,11 @@ export default defineComponent({
             }
         }
         const goForward = () => {
-            if (item.value !== 'Playlists' && toggleClicks) {
+            if (toggleClicks.value) {
                 switch (item.value) {
                     case 'Artists':
                         item.value = 'Tracks';
                         colors.value = 'var(--rengoku)';
-                        break;
-                    case 'Tracks':
-                        item.value = 'Playlists';
-                        colors.value = 'var(--tamagotchi)';
                         break;
                 }
             }

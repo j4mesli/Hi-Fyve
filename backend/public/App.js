@@ -23,6 +23,7 @@ const cors_1 = __importDefault(require("cors"));
 // types/interfaces/components
 const scopes_1 = require("./components/scopes");
 const genre_color_json_1 = __importDefault(require("./json/genre-color.json"));
+const color_name_json_1 = __importDefault(require("./json/color-name.json"));
 // init server
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -40,7 +41,7 @@ let creds = {
     clientSecret: config.clientSecret,
     redirectUri: config.redirectUri,
 };
-let spotifyApi = new spotify_web_api_node_1.default(creds);
+const spotifyApi = new spotify_web_api_node_1.default(creds);
 // routes
 //// gets authorization URL for frontend to open
 app.get('/getURL', (req, res) => {
@@ -186,6 +187,23 @@ app.get('/getTopTracks', (req, res) => __awaiter(void 0, void 0, void 0, functio
             .catch(err => res.send(err));
     }
 }));
+//// get track features
+app.get('/getTrackFeatures', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.access_token && req.query.id) {
+        const firstRes = res;
+        const url = 'https://api.spotify.com/v1/audio-features/' + req.query.id;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token,
+        };
+        yield fetch(url, { headers: headers })
+            .then(res => res.json())
+            .then(data => firstRes.send(data))
+            .catch(err => res.send(err))
+            .catch(err => res.send(err));
+    }
+}));
 //// get genre: color .json
 app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.genre) {
@@ -195,6 +213,27 @@ app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     else {
         try {
             const location = path_1.default.join(__dirname, '..', 'json', 'genre-color.json');
+            res.header("Content-Type", 'application/json');
+            res.sendFile(location);
+        }
+        catch (err) {
+            const error = {
+                "error": err,
+                "code": 404,
+            };
+            res.send(error);
+        }
+    }
+}));
+//// get color: name .json
+app.get('/nameForColor', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.color) {
+        const color = req.query.color;
+        res.send({ name: color_name_json_1.default[color] });
+    }
+    else {
+        try {
+            const location = path_1.default.join(__dirname, '..', 'json', 'color-name.json');
             res.header("Content-Type", 'application/json');
             res.sendFile(location);
         }

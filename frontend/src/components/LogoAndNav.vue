@@ -7,7 +7,7 @@
             <router-link to="/">Home</router-link>
             <router-link to="/About">About</router-link>
             <router-link to="/MyHiFyve">Hi-Fyve!</router-link>
-            <router-link to="/Recommendations">Recommendations</router-link>
+            <router-link to="/Trends">Trends</router-link>
             <router-link to="/Synesthesia">Synesthesia</router-link>
             <router-link to="/Worldwyde">Worldwyde</router-link>
         </nav>
@@ -19,7 +19,7 @@
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/"><li>Home</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/About"><li>About</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/MyHiFyve"><li>Hi-Fyve!</li></router-link></div>
-            <div class="menuEntry"><router-link style="text-decoration: none;" to="/Recommendations"><li>Recommendations</li></router-link></div>
+            <div class="menuEntry"><router-link style="text-decoration: none;" to="/Trends"><li>Trends</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/Synesthesia"><li>Synesthesia</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/Worldwyde"><li>Worldwyde</li></router-link></div>
         </ul>

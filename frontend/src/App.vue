@@ -6,13 +6,18 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LogoAndNavVue from './components/LogoAndNav.vue';
+import { handleLogIn } from './components/functions/handleLogIn';
 
 export default defineComponent({
   components: {
     LogoAndNavVue,
   },
   setup() {
-    
+    if (sessionStorage.access_token && sessionStorage.refresh_token) {
+      if (sessionStorage.access_token === 'undefined' || sessionStorage.refresh_token === 'undefined') {
+        handleLogIn();
+      }
+    }
     return {  };
   },
 })

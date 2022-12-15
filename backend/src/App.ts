@@ -13,6 +13,7 @@ import { credentials } from "./types/credentials";
 import { getTopXQuery } from "./types/getTopXQuery";
 import { getMyInfo } from "./types/getMyInfo";
 import colors from "./json/genre-color.json";
+import colorToName from "./json/color-name.json";
 
 // init server
 const app = express();
@@ -32,7 +33,7 @@ let creds: credentials = {
     clientSecret: config.clientSecret,
     redirectUri: config.redirectUri,
 };
-let spotifyApi = new spotifyWebApi(creds);
+const spotifyApi = new spotifyWebApi(creds);
 
 // routes
 //// gets authorization URL for frontend to open
@@ -186,6 +187,24 @@ app.get('/getTopTracks', async (req, res) => {
     }
 });
 
+//// get track features
+app.get('/getTrackFeatures', async (req, res) => {
+    if (req.query.access_token && req.query.id) {
+        const firstRes = res;
+        const url = 'https://api.spotify.com/v1/audio-features/' + req.query.id;
+        const headers = { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token, 
+        };
+        await fetch(url, { headers: headers })
+            .then(res => res.json())
+                .then(data => firstRes.send(data))
+                .catch(err => res.send(err))
+            .catch(err => res.send(err));
+    }
+});
+
 //// get genre: color .json
 app.get('/colors', async (req, res) => {
     if (req.query.genre) {
@@ -195,6 +214,28 @@ app.get('/colors', async (req, res) => {
     else {
         try {
             const location: string = path.join(__dirname, '..', 'json', 'genre-color.json');
+            res.header("Content-Type",'application/json');
+            res.sendFile(location);
+        }
+        catch(err) {
+            const error: { error: string, code: number | string } = {
+                "error": err as string, 
+                "code": 404,
+            } 
+            res.send(error);
+        }
+    }
+});
+
+//// get color: name .json
+app.get('/nameForColor', async (req, res) => {
+    if (req.query.color) {
+        const color = req.query.color as string;
+        res.send({ name: colorToName[color as keyof typeof colorToName] });
+    }
+    else {
+        try {
+            const location: string = path.join(__dirname, '..', 'json', 'color-name.json');
             res.header("Content-Type",'application/json');
             res.sendFile(location);
         }

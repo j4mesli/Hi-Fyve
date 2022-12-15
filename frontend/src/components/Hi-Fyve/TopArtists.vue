@@ -1,72 +1,73 @@
 <template>
     <LoadingSpinnerVue v-if="data.length === 0 && top5.length === 0"/>
     <div v-else class="top-artists-wrapper">
-        <div class="artist-card top open" @click="e => closeHere(e)" v-if="(top5 as Array<Object>).length >= 1">
+        <div class="artist-card top open" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[0]">
             <div class="body-paragraph">
-                <h2 class="title">#1. {{ top5[0].name }} <a target="_blank" :href="top5[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#1. {{ (top5 as any[])[0].name }} <a target="_blank" :href="(top5 as any[])[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[0] }}</span></h4>
                 <h4>Genre(s): 
-                    <span v-if="top5[0].genres.length >= 1">{{ top5[0].genres[0] }}</span>
-                    <span v-if="top5[0].genres.length >= 2">, {{ top5[0].genres[1] }}</span>
-                </h4>                <h4>Popularity: <span>{{ top5[0].popularity }} / 100</span></h4>
-                <h4>Followers: <span>{{ addCommas(top5[0].followers.total) }}</span></h4>
+                    <span v-if="(top5 as any[])[0].genres.length >= 1">{{ (top5 as any[])[0].genres[0] }}</span>
+                    <span v-if="(top5 as any[])[0].genres.length >= 2">, {{ (top5 as any[])[0].genres[1] }}</span>
+                </h4>                
+                <h4>Popularity: <span>{{ (top5 as any[])[0].popularity }} / 100</span></h4>
+                <h4>Followers: <span>{{ addCommas((top5 as any[])[0].followers.total) }}</span></h4>
             </div>
-            <div class="pfp" :style="{ 'background-image': `url(${top5[0].images[0].url})`, 'opacity': '0.9' }"></div>
+            <div class="pfp" :style="{ 'background-image': `url(${(top5 as any[])[0].images[0].url})`, 'opacity': '0.9' }"></div>
         </div>
-        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>).length >= 2">
+        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[1]">
             <div class="body-paragraph closed">
-                <h2 class="title">#2. {{ top5[1].name }} <a target="_blank" :href="top5[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#2. {{ (top5 as any[])[1].name }} <a target="_blank" :href="(top5 as any[])[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[1] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
-                    <span v-if="top5[1].genres.length >= 1">{{ top5[1].genres[0] }}</span>
-                    <span v-if="top5[1].genres.length >= 2">, {{ top5[1].genres[1] }}</span>
+                    <span v-if="(top5 as any[])[1].genres.length >= 1">{{ (top5 as any[])[1].genres[0] }}</span>
+                    <span v-if="(top5 as any[])[1].genres.length >= 2">, {{ (top5 as any[])[1].genres[1] }}</span>
                 </h4>
-                <h4 class="hide-child-element">Popularity: <span>{{ top5[1].popularity }} / 100</span></h4>
-                <h4 class="hide-child-element">Followers: <span>{{ addCommas(top5[1].followers.total) }}</span></h4>
+                <h4 class="hide-child-element">Popularity: <span>{{ (top5 as any[])[1].popularity }} / 100</span></h4>
+                <h4 class="hide-child-element">Followers: <span>{{ addCommas((top5 as any[])[1].followers.total) }}</span></h4>
             </div>
-            <div class="pfp minimized" :style="{ 'background-image': `url(${top5[1].images[0].url})`, 'opacity': '0.9' }"></div>
+            <div class="pfp minimized" :style="{ 'background-image': `url(${(top5 as any[])[1].images[0].url})`, 'opacity': '0.9' }"></div>
         </div>
-        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>).length >= 3">
+        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[2]">
             <div class="body-paragraph closed">
-                <h2 class="title">#3. {{ top5[2].name }} <a target="_blank" :href="top5[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#3. {{ (top5 as any[])[2].name }} <a target="_blank" :href="(top5 as any[])[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[2] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
-                    <span v-if="top5[2].genres.length >= 1">{{ top5[2].genres[0] }}</span>
-                    <span v-if="top5[2].genres.length >= 2">, {{ top5[2].genres[1] }}</span>
-                </h4>                <h4 class="hide-child-element">Popularity: <span>{{ top5[2].popularity }} / 100</span></h4>
-                <h4 class="hide-child-element">Followers: <span>{{ addCommas(top5[2].followers.total) }}</span></h4>
+                    <span v-if="(top5 as any[])[2].genres.length >= 1">{{ (top5 as any[])[2].genres[0] }}</span>
+                    <span v-if="(top5 as any[])[2].genres.length >= 2">, {{ (top5 as any[])[2].genres[1] }}</span>
+                </h4>                <h4 class="hide-child-element">Popularity: <span>{{ (top5 as any[])[2].popularity }} / 100</span></h4>
+                <h4 class="hide-child-element">Followers: <span>{{ addCommas((top5 as any[])[2].followers.total) }}</span></h4>
             </div>
-            <div class="pfp minimized" :style="{ 'background-image': `url(${top5[2].images[0].url})`, 'opacity': '0.9' }"></div>
+            <div class="pfp minimized" :style="{ 'background-image': `url(${(top5 as any[])[2].images[0].url})`, 'opacity': '0.9' }"></div>
         </div>
-        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>).length >= 4">
+        <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[3]">
             <div class="body-paragraph closed">
-                <h2 class="title">#4. {{ top5[3].name }} <a target="_blank" :href="top5[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#4. {{ (top5 as any[])[3].name }} <a target="_blank" :href="(top5 as any[])[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[3] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
-                    <span v-if="top5[3].genres.length >= 1">{{ top5[3].genres[0] }}</span>
-                    <span v-if="top5[3].genres.length >= 2">, {{ top5[3].genres[1] }}</span>
+                    <span v-if="(top5 as any[])[3].genres.length >= 1">{{ (top5 as any[])[3].genres[0] }}</span>
+                    <span v-if="(top5 as any[])[3].genres.length >= 2">, {{ (top5 as any[])[3].genres[1] }}</span>
                 </h4>
-                <h4 class="hide-child-element">Popularity: <span>{{ top5[3].popularity }} / 100</span></h4>
-                <h4 class="hide-child-element">Followers: <span>{{ addCommas(top5[3].followers.total) }}</span></h4>
+                <h4 class="hide-child-element">Popularity: <span>{{ (top5 as any[])[3].popularity }} / 100</span></h4>
+                <h4 class="hide-child-element">Followers: <span>{{ addCommas((top5 as any[])[3].followers.total) }}</span></h4>
             </div>
-            <div class="pfp minimized" :style="{ 'background-image': `url(${top5[3].images[0].url})`, 'opacity': '0.9' }"></div>
+            <div class="pfp minimized" :style="{ 'background-image': `url(${(top5 as any[])[3].images[0].url})`, 'opacity': '0.9' }"></div>
         </div>
-        <div class="artist-card" :class="{ 'bottom': data.length === 0 }" @click="e => closeHere(e)" v-if="(top5 as Array<Object>).length >= 4">
+        <div class="artist-card" :class="{ 'bottom': data.length === 0 }" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[4]">
             <div class="body-paragraph closed">
-                <h2 class="title">#5. {{ top5[4].name }} <a target="_blank" :href="top5[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#5. {{ (top5 as any[])[4].name }} <a target="_blank" :href="(top5 as any[])[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[4] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
-                    <span v-if="top5[4].genres.length >= 1">{{ top5[4].genres[0] }}</span>
-                    <span v-if="top5[4].genres.length >= 2">, {{ top5[4].genres[1] }}</span>
+                    <span v-if="(top5 as any[])[4].genres.length >= 1">{{ (top5 as any[])[4].genres[0] }}</span>
+                    <span v-if="(top5 as any[])[4].genres.length >= 2">, {{ (top5 as any[])[4].genres[1] }}</span>
                 </h4>
-                <h4 class="hide-child-element">Popularity: <span>{{ top5[4].popularity }} / 100</span></h4>
-                <h4 class="hide-child-element">Followers: <span>{{ addCommas(top5[4].followers.total) }}</span></h4>
+                <h4 class="hide-child-element">Popularity: <span>{{ (top5 as any[])[4].popularity }} / 100</span></h4>
+                <h4 class="hide-child-element">Followers: <span>{{ addCommas((top5 as any[])[4].followers.total) }}</span></h4>
             </div>
-            <div class="pfp minimized" :style="{ 'background-image': `url(${top5[4].images[0].url})`, 'opacity': '0.9' }"></div>
+            <div class="pfp minimized" :style="{ 'background-image': `url(${(top5 as any[])[4].images[0].url})`, 'opacity': '0.9' }"></div>
         </div>
-        <div class="artist-card" :class="{ 'bottom': evaluateBottomWindow(index) }" @click="e => closeHere(e)" v-if="data.length !== 0" v-for="(artist, index) in data" :key="artist">
+        <div class="artist-card" :class="{ 'bottom': evaluateBottomWindow(index) }" @click="e => closeHere(e)" v-if="data.length !== 0" v-for="(artist, index) in (data as Array<any>)" :key="artist">
             <div class="body-paragraph closed">
-                <h2 class="title">#{{index + 6}}. {{ artist.name }} <a target="_blank" :href="data[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <h2 class="title">#{{index + 6}}. {{ artist.name }} <a target="_blank" :href="(data as Array<any>)[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
                 <h4>Most Popular Track: <span>{{ topTracks[6+index] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="artist.genres.length >= 1">{{ artist.genres[0] }}</span>
@@ -102,15 +103,15 @@ export default defineComponent({
     setup(props, context) {
         const hideButton = ref(false);
         const debugURL = ref('url(\'https://i.scdn.co/image/ab6761610000e5eb02eeb5305fa7bdd9ddca42fc\')');
-        const data = ref([]) as Ref<any[]>;
-        const top5 = ref([]) as Ref<any[]>;
+        const data = ref([]) as Ref<unknown[]>;
+        const top5 = ref([]) as Ref<unknown[]>;
         const error = ref(null);
-        const topTracks = ref([]) as Ref<any[]>;
+        const topTracks = ref([]) as Ref<string[]>;
         // watch hook for updated time-frame value
         watch(() => props.timeframe, async (newValue) => {
-            data.value = [] as any[];
-            top5.value = [] as any[];
-            topTracks.value = [] as any[];
+            data.value = [] as unknown[];
+            top5.value = [] as unknown[];
+            topTracks.value = [] as string[];
             context.emit('allowClicks', false as boolean);
             const params: handleUserInformation = {
                 request_type: props.item as string,
@@ -120,12 +121,12 @@ export default defineComponent({
             };
             await getUserInformation(params)
                 .then(async res => {
-                    const items: Array<any> = res.items;
+                    const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
                         await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
                         .then(res => { return res.json() })
                             .then(res => {
-                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' : res.tracks[0].name;
+                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
                                 topTracks.value.push(name);
                                 if (topTracks.value.length === items.length) {
                                     top5.value = items.slice(0,items.length);
@@ -139,8 +140,9 @@ export default defineComponent({
                 .catch(err => error.value = err);
             }
         );
-        // update function for showAll button click
+        // update function for load more button click
         const loadAllTracks = async () => {
+            const bottomElement = (document.querySelector('.bottom') as HTMLElement) as HTMLElement;
             hideButton.value = !hideButton.value;
             context.emit('allowClicks', false as boolean);
             const params: handleUserInformation = {
@@ -151,17 +153,26 @@ export default defineComponent({
             };
             await getUserInformation(params)
                 .then(async res => {
-                    const items: Array<any> = res.items;
+                    const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
                         await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
                         .then(res => { return res.json() })
                             .then(res => {
-                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' : res.tracks[0].name;
+                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
                                 topTracks.value.push(name);
                                 if ((topTracks.value.length - 5) === (data.value.length + 6)) {
                                     hideButton.value = !hideButton.value;
                                     data.value.push(...items.slice(0,items.length));
                                     context.emit('allowClicks', true as boolean);
+                                    // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                                    // automatically closes on loading of additional cards and doesn't close the card contents with it
+                                    if (bottomElement.classList.contains('open')) {
+                                        for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                            bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                            bottomElement.children[0].classList.toggle('closed');
+                                        }
+                                        bottomElement.children[1].classList.toggle('minimized');
+                                    }
                                 }
                             })
                             .catch(err => console.table(err))
@@ -187,18 +198,18 @@ export default defineComponent({
             offset: "0",
         };
         onMounted(async () => {
-            data.value = [] as any[];
-            top5.value = [] as any[];
-            topTracks.value = [] as any[];
+            data.value = [] as unknown[];
+            top5.value = [] as unknown[];
+            topTracks.value = [] as string[];
             context.emit('allowClicks', false as boolean);
             await getUserInformation(params)
             .then(async res => {
-                const items: Array<any> = res.items;
+                const items: Array<typeof res.items> = res.items;
                 for await (const item of items) {
                     await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
                     .then(res => { return res.json() })
                         .then(res => {
-                            const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' : res.tracks[0].name;
+                            const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
                             topTracks.value.push(name);
                             if (topTracks.value.length === items.length) {
                                 top5.value = items.slice(0,items.length);
@@ -218,15 +229,15 @@ export default defineComponent({
                 const elem: Element = e.currentTarget as Element;
                 if (elem.classList.contains('open')) {
                     for (let i = 2; i < elem.children[0].children.length; i++) {
-                        elem.children[1].classList.toggle('minimized');
                         elem.children[0].children[i].classList.toggle('hide-child-element');
                         elem.children[0].classList.toggle('closed');
                     }
+                    elem.children[1].classList.toggle('minimized');
                 }
                 else {
                     setTimeout(() => {
+                        elem.children[1].classList.toggle('minimized');
                         for (let i = 2; i < elem.children[0].children.length; i++) {
-                            elem.children[1].classList.toggle('minimized');
                             elem.children[0].children[i].classList.toggle('hide-child-element');
                             elem.children[0].classList.toggle('closed');
                         }
@@ -372,6 +383,9 @@ export default defineComponent({
 @media (max-width: 500px) { 
     .artist-card {
         width: 95%;
+    }
+    .body-paragraph {
+        width: 80%;
     }
 }
 @media (max-width: 325px) { 

@@ -10,7 +10,7 @@
             <div class="info">
                 <h1>Music Insights, Powered by You!</h1>
                 <div class="body-paragraph">
-                    <h4>With SpotiFyve's Hi-Fyve, you can see how "fyre" your favorite artists, albums, and tracks really are!</h4>
+                    <h4>With SpotiFyve's Hi-Fyve, you can see how "fyre 🔥" your favorite artists, albums, and tracks really are!</h4>
                     <h4>See your most played content on Spotify from the past month, 6 months, or the full extent of your listening history.</h4>
                     <h4>Our analysis tools provide deep insights into your music, so you can discover new favorites and elevate your listening experience.</h4>
                 </div>
@@ -21,18 +21,18 @@
         </div>
         <div class="block">
             <div class="info">
-                <h1 class="rengoku">Set Your Heart Ablaze</h1>
+                <h1 class="ebtr">Everything But The Rain 🌧️</h1>
                 <div class="body-paragraph">
-                    <h4>Looking for new music to enjoy?<br>Try our song recommendation system, expertly curated based on your Spotify listening habits.</h4>
-                    <h4>Our system will help you discover tracks that fit your personal taste and musical preferences. </h4>
-                    <h4>No need to search endlessly - let us help you find your new go-to songs with just a few clicks.</h4>
+                    <h4>Want to get even more out of your music listening experience?</h4>
+                    <h4>Our analytics system provides detailed analysis of your online music habits,<br>including your favorite songs and artists, listening patterns, and more.</h4>
+                    <h4>With this feature, you can track and compare your listening habits over time, letting you learn everything about your music tastes.</h4>
                 </div>
             </div>
-            <ExampleRecommendationVue />
+            <ExampleAnalyticsVue />
         </div>
         <div class="block bottom">
             <div class="info">
-                <h1>Introducing <span>Synesthesia.</span></h1>
+                <h1>Introducing <span>Synesthesia🎜</span></h1>
                 <div class="body-paragraph">
                     <h4>With Synesthesia, you can visualize your audio in a whole new way.</h4>
                     <h4> Our service generates a unique animated pattern based on your Spotify listening habits,<br>creating a personalized and immersive experience.</h4>
@@ -48,13 +48,13 @@
 import { defineComponent } from 'vue';
 import ExampleArtistVue from './ExamplePanels/ExampleArtist.vue';
 import ExampleSynesthesiaVue from './ExamplePanels/ExampleSynesthesia.vue';
-import ExampleRecommendationVue from './ExamplePanels/ExampleRecommendation.vue';
+import ExampleAnalyticsVue from './ExamplePanels/ExampleAnalytics.vue';
 
 export default defineComponent({
     components: {
         ExampleArtistVue,
         ExampleSynesthesiaVue,
-        ExampleRecommendationVue,
+        ExampleAnalyticsVue,
     },
     setup() {
         return {  };
@@ -63,8 +63,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.rengoku {
-    color: var(--rengoku-static);
+.ebtr {
+    color: var(--ebtr);
 }
 /*
 .rengoku {
@@ -95,14 +95,15 @@ span {
     width: 94%;
     padding: 50px 3%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     flex-direction: column;
 }
 .block {
+    width: 80%;
     margin: 180px auto 60px auto;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     flex-direction: row;
 }
@@ -111,6 +112,7 @@ span {
 }
 @media (max-width: 775px) { 
     .block { 
+        width: 100%;
         flex-direction: column;
         justify-content: center;
     }

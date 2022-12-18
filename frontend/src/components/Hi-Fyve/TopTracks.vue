@@ -48,7 +48,6 @@ export default defineComponent({
     },
     setup(props, context) {
         const hideButton = ref(false);
-        const debugURL = ref('url(\'https://i.scdn.co/image/ab6761610000e5eb02eeb5305fa7bdd9ddca42fc\')');
         const data = ref([]) as Ref<unknown[]>;
         const error = ref(null);
         const track_attrs = ref([]) as Ref<unknown[]>;
@@ -200,7 +199,7 @@ export default defineComponent({
             }
         }
 
-        return { debugURL, closeHere, data, error, addCommas, longName, track_attrs, evaluateBottomWindow, convertMilliseconds, loadAllTracks, hideButton };
+        return { closeHere, data, error, addCommas, longName, track_attrs, evaluateBottomWindow, convertMilliseconds, loadAllTracks, hideButton };
     },
 })
 </script>

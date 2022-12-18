@@ -3,20 +3,21 @@
         <rotatingWordsVue />
         <div class="Hi-Fyve-Content-nested-wrapper">
             <div class="Hi-Fyve-Content">
-                <h1>Your Favorite Artists, Tracks, and More</h1>
-               
+                <demoTracksArtistsVue />
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent } from 'vue'
 import rotatingWordsVue from './rotatingWords.vue';
+import demoTracksArtistsVue from './demoTracksArtists.vue';
 
 export default defineComponent({
     components: {
         rotatingWordsVue,
+        demoTracksArtistsVue,
     },
     setup() {
         
@@ -27,7 +28,6 @@ export default defineComponent({
 
 <style>
 .Hi-Fyve-Content {
-    border: 1px solid #fff;
     display: flex;
     justify-content: center;
     align-items: center;

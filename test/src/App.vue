@@ -1,6 +1,8 @@
 <template>
   <h1>Touchdown!</h1>
   <button @click="data">Get Tokens</button>
+  <button v-if="vanilla" @click="vanilla = !vanilla">Vanilla</button>
+  <button v-if="!vanilla" @click="vanilla = !vanilla">P5.js</button>
   <form @submit.prevent="getTop10">
     <label for="Request Type">Request Type:</label>
     <select id="Request Type" v-model="request_type" required>
@@ -39,14 +41,20 @@
       </li>
     </ul>
   </div>
+  <visualizer v-if="vanilla"/>
+  <p5 v-else />
 </template>
 
 <script>
-import { ref } from '@vue/reactivity'
+import { ref } from '@vue/reactivity';
+import visualizer from './components/visualizer.vue';
+import p5 from './components/p5.vue';
+
 export default {
   name: 'App',
   components: {
-    
+    visualizer, 
+    p5,
   },
   setup() {
     const hasData = ref(false);
@@ -59,8 +67,9 @@ export default {
     const song_number = ref(null);
     const offset = ref(0);
     const top10 = ref(null);
+    const vanilla = ref(true);
     const data = async () => {
-      await fetch('http://localhost:3000/getKey')
+      await fetch('http://localhost:3000/getURL')
         .then(res => {
           console.log(res);
           hasData.value = true;
@@ -100,7 +109,7 @@ export default {
     refresh_token.value = JSON.parse(JSON.stringify(params)).refresh_token;
     window.history.replaceState(null, null, window.location.pathname);
 
-    return { hasData, data, obj, error, access_token, refresh_token, getTop10, request_type, time_range, song_number, offset, top10 };
+    return { hasData, data, obj, error, access_token, refresh_token, getTop10, request_type, time_range, song_number, offset, top10, vanilla };
   }, 
 }
 </script>

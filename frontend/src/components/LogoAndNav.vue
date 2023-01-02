@@ -1,9 +1,9 @@
 <template>
-    <header>
+    <header id="navbar">
         <div class="logo">
             <router-link to="/"><img src="../../public/powered_by_spotify.png"></router-link>
         </div>
-        <nav v-if="(width > 1250)">
+        <nav v-if="(width > 1250)" id="big-router">
             <router-link to="/">Home</router-link>
             <router-link to="/About">About</router-link>
             <router-link to="/MyHiFyve">Hi-Fyve!</router-link>
@@ -15,7 +15,7 @@
         <span v-if="(width > 1250)" class="material-symbols-outlined" @click="updateMenu" :class="{ active: hideShowMenu }">{{navOpenClose}}</span>
     </header>
     <div class="slideInMenu" v-if="(hideShowMenu && width < 1250)" @click="updateMenu">
-        <ul>
+        <ul id="little-router">
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/"><li>Home</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/About"><li>About</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/MyHiFyve"><li>Hi-Fyve!</li></router-link></div>

@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,45 +7,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
 // packages
-const express_1 = __importDefault(require("express"));
-const morgan_1 = __importDefault(require("morgan"));
-const spotify_web_api_node_1 = __importDefault(require("spotify-web-api-node"));
-const crypto_1 = __importDefault(require("crypto"));
-const path_1 = __importDefault(require("path"));
-const fs_1 = __importDefault(require("fs"));
-const cors_1 = __importDefault(require("cors"));
+import express from "express";
+import morgan from "morgan";
+import spotifyWebApi from "spotify-web-api-node";
+import crypto from "crypto";
+import path from "path";
+import fs from "fs";
+import cors from "cors";
+import invert from "invert-color";
+import * as ntc from 'ntc-ts'; // primary import
+// import * as ntcts from './functions/ntc-ts/index'; // alternate import
 // types/interfaces/components
-const scopes_1 = require("./components/scopes");
-const genre_color_json_1 = __importDefault(require("./json/genre-color.json"));
-const color_name_json_1 = __importDefault(require("./json/color-name.json"));
+import { scopes } from "./components/scopes.js";
+import { rgbToHex } from "./functions/RGBtoHex.js";
+import colors from "./json/genre-color.json" assert { type: 'json' };
+import colorToName from "./json/color-name.json" assert { type: 'json' };
 // init server
-const app = (0, express_1.default)();
-app.use((0, cors_1.default)());
+const app = express();
+app.use(cors());
 app.listen(3000, 'localhost', () => {
     console.log("It's alive on http://localhost:3000");
 });
 // middleware
-app.use((0, morgan_1.default)('dev'));
+app.use(morgan('dev'));
+ntc.initColors(ntc.ORIGINAL_COLORS);
 // init spotify access
-var config = JSON.parse(fs_1.default.readFileSync(path_1.default.join(__dirname, '..', 'json', 'access.json'), 'utf8'));
-const state = crypto_1.default.randomBytes(16).toString('hex');
+var config = JSON.parse(fs.readFileSync(path.join(path.resolve(), 'json', 'access.json'), 'utf8'));
+const state = crypto.randomBytes(16).toString('hex');
 ;
 let creds = {
     clientId: config.clientId,
     clientSecret: config.clientSecret,
     redirectUri: config.redirectUri,
 };
-const spotifyApi = new spotify_web_api_node_1.default(creds);
+const spotifyApi = new spotifyWebApi(creds);
 // routes
 //// gets authorization URL for frontend to open
 app.get('/getURL', (req, res) => {
     let obj = {};
-    obj = Object.assign({ 'url': spotifyApi.createAuthorizeURL(scopes_1.scopes, state) }, obj);
+    obj = Object.assign({ 'url': spotifyApi.createAuthorizeURL(scopes, state) }, obj);
     res.send(obj);
 });
 //// callback route
@@ -96,7 +96,7 @@ app.get('/refresh', (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     if (req.query.refresh_token) {
         const refresh_token = req.query.refresh_token;
         try {
-            const refreshCall = new spotify_web_api_node_1.default({ clientId: creds.clientId, clientSecret: creds.clientSecret });
+            const refreshCall = new spotifyWebApi({ clientId: creds.clientId, clientSecret: creds.clientSecret });
             refreshCall.setRefreshToken(req.query.refresh_token);
             yield spotifyApi.refreshAccessToken()
                 .then((res) => {
@@ -208,11 +208,11 @@ app.get('/getTrackFeatures', (req, res) => __awaiter(void 0, void 0, void 0, fun
 app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.genre) {
         const genre = req.query.genre;
-        res.send({ color: genre_color_json_1.default[genre] });
+        res.send({ color: colors[genre] });
     }
     else {
         try {
-            const location = path_1.default.join(__dirname, '..', 'json', 'genre-color.json');
+            const location = path.join(__dirname, '..', 'json', 'genre-color.json');
             res.header("Content-Type", 'application/json');
             res.sendFile(location);
         }
@@ -225,15 +225,15 @@ app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         }
     }
 }));
-//// get color: name .json
+//// get color: name .json HEX ONLY
 app.get('/nameForColor', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (req.query.color) {
         const color = req.query.color;
-        res.send({ name: color_name_json_1.default[color] });
+        res.send({ name: colorToName[color] });
     }
     else {
         try {
-            const location = path_1.default.join(__dirname, '..', 'json', 'color-name.json');
+            const location = path.join(__dirname, '..', 'json', 'color-name.json');
             res.header("Content-Type", 'application/json');
             res.sendFile(location);
         }
@@ -244,5 +244,102 @@ app.get('/nameForColor', (req, res) => __awaiter(void 0, void 0, void 0, functio
             };
             res.send(error);
         }
+    }
+}));
+//// get song obj for Synesthesia
+app.get('/synesthesia', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const firstRes = res;
+    if (req.query.access_token && req.query.request_type && req.query.time_range && req.query.limit && req.query.offset) {
+        try {
+            const params = {
+                access_token: req.query.access_token,
+                request_type: req.query.request_type,
+                time_range: req.query.time_range,
+                limit: req.query.limit,
+                offset: req.query.offset,
+            };
+            const headers = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.access_token,
+            };
+            const url = 'https://api.spotify.com/v1/me/top/' + params.request_type + '?time_range=' + params.time_range + '&limit=' + params.limit + '&offset=' + params.offset;
+            yield fetch(url, { headers: headers })
+                .then(res => res.json())
+                .then((data) => __awaiter(void 0, void 0, void 0, function* () {
+                const random_selection = Math.floor(Math.random() * data.items.length);
+                const output = {
+                    top_name: data.items[random_selection].name,
+                    top_artists: [],
+                    top_image: data.items[random_selection].album.images[0].url,
+                    top_mp3: data.items[random_selection].preview_url,
+                    color1: [0, 0, 0],
+                    color1_hex: '',
+                    color1_name: '',
+                    color2: [0, 0, 0],
+                    color2_hex: '',
+                    color2_name: '',
+                };
+                data.items[random_selection].artists.forEach((el) => {
+                    output.top_artists.push(el.name);
+                });
+                console.table(output);
+                // loop through songs and get colors
+                // const masterData = data.items;
+                for (let i = 0; i <= Object.keys(data.items).length; i++) {
+                    if (i === Object.keys(data.items).length) {
+                        const color2_array = output.color2.map(x => Math.round(x / (Object.keys(data.items).length * 2) * 255));
+                        // output.color2 = shuffleArray(color2_array) as number[];
+                        output.color2 = color2_array;
+                        output.color2_hex = rgbToHex(output.color2);
+                        output.color2_name = ntc.getColorName(output.color2_hex).name;
+                        output.color1 = invert.asRgbArray(output.color2);
+                        output.color1_hex = rgbToHex(output.color1);
+                        output.color1_name = ntc.getColorName(output.color1_hex).name;
+                        firstRes.send(output);
+                    }
+                    else {
+                        yield fetch('http://localhost:3000/trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
+                            .then(res => res.json())
+                            .then(data => {
+                            // update color1 r,g,b
+                            output.color2[0] += data.valence + data.liveness;
+                            output.color2[1] += data.danceability + data.speechiness;
+                            output.color2[2] += data.energy + data.acousticness;
+                        })
+                            .catch(err => firstRes.send(err))
+                            .catch(err => firstRes.send(err));
+                    }
+                }
+            }))
+                .catch(err => firstRes.send(err))
+                .catch(err => firstRes.send(err));
+        }
+        catch (err) {
+            firstRes.send(err);
+        }
+    }
+    else {
+        res.send('CHECK TOKEN');
+    }
+}));
+//// detailed track analysis
+app.get('/trackAnalysis', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.access_token && req.query.id) {
+        const firstRes = res;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token,
+        };
+        const url = 'https://api.spotify.com/v1/audio-features/' + req.query.id;
+        yield fetch(url, { headers: headers })
+            .then(res => res.json())
+            .then(data => res.send(data))
+            .catch(err => firstRes.send(err))
+            .catch(err => firstRes.send(err));
+    }
+    else {
+        res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
     }
 }));

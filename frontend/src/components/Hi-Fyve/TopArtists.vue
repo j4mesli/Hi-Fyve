@@ -122,19 +122,24 @@ export default defineComponent({
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    for await (const item of items) {
-                        await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
-                        .then(res => { return res.json() })
-                            .then(res => {
-                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
-                                topTracks.value.push(name);
-                                if (topTracks.value.length === items.length) {
-                                    top5.value = items.slice(0,items.length);
-                                    context.emit('allowClicks', true as boolean);
-                                }
-                            })
-                            .catch(err => console.table(err))
-                        .catch(err => console.table(err));
+                    if (items.length === 0) {
+                        context.emit('allowClicks', true as boolean);
+                    }
+                    else {
+                        for await (const item of items) {
+                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                            .then(res => { return res.json() })
+                                .then(res => {
+                                    const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
+                                    topTracks.value.push(name);
+                                    if (topTracks.value.length === items.length) {
+                                        top5.value = items.slice(0,items.length);
+                                        context.emit('allowClicks', true as boolean);
+                                    }
+                                })
+                                .catch(err => console.table(err))
+                            .catch(err => console.table(err));
+                        }
                     }
                 })
                 .catch(err => error.value = err);
@@ -154,29 +159,43 @@ export default defineComponent({
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    for await (const item of items) {
-                        await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
-                        .then(res => { return res.json() })
-                            .then(res => {
-                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
-                                topTracks.value.push(name);
-                                if ((topTracks.value.length - 5) === (data.value.length + 6)) {
-                                    hideButton.value = !hideButton.value;
-                                    data.value.push(...items.slice(0,items.length));
-                                    context.emit('allowClicks', true as boolean);
-                                    // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
-                                    // automatically closes on loading of additional cards and doesn't close the card contents with it
-                                    if (bottomElement.classList.contains('open')) {
-                                        for (let i = 2; i < bottomElement.children[0].children.length; i++) {
-                                            bottomElement.children[0].children[i].classList.toggle('hide-child-element');
-                                            bottomElement.children[0].classList.toggle('closed');
+                    if (items.length === 0) {
+                        context.emit('allowClicks', true as boolean);
+                        // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                        // automatically closes on loading of additional cards and doesn't close the card contents with it
+                        if (bottomElement.classList.contains('open')) {
+                            for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                bottomElement.children[0].classList.toggle('closed');
+                            }
+                            bottomElement.children[1].classList.toggle('minimized');
+                        }
+                    }
+                    else {
+                        for await (const item of items) {
+                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                            .then(res => { return res.json() })
+                                .then(res => {
+                                    const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
+                                    topTracks.value.push(name);
+                                    if ((topTracks.value.length - items.length) === (data.value.length + items.length)) {
+                                        hideButton.value = !hideButton.value;
+                                        data.value.push(...items.slice(0,items.length));
+                                        context.emit('allowClicks', true as boolean);
+                                        // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                                        // automatically closes on loading of additional cards and doesn't close the card contents with it
+                                        if (bottomElement.classList.contains('open')) {
+                                            for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                                bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                                bottomElement.children[0].classList.toggle('closed');
+                                            }
+                                            bottomElement.children[1].classList.toggle('minimized');
                                         }
-                                        bottomElement.children[1].classList.toggle('minimized');
                                     }
-                                }
-                            })
-                            .catch(err => console.table(err))
-                        .catch(err => console.table(err));
+                                })
+                                .catch(err => console.table(err))
+                            .catch(err => console.table(err));
+                        }
                     }
                 })
                 .catch(err => error.value = err);
@@ -205,19 +224,24 @@ export default defineComponent({
             await getUserInformation(params)
             .then(async res => {
                 const items: Array<typeof res.items> = res.items;
-                for await (const item of items) {
-                    await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
-                    .then(res => { return res.json() })
-                        .then(res => {
-                            const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
-                            topTracks.value.push(name);
-                            if (topTracks.value.length === items.length) {
-                                top5.value = items.slice(0,items.length);
-                                context.emit('allowClicks', true as boolean);
-                            }
-                        })
-                        .catch(err => console.table(err))
-                    .catch(err => console.table(err));
+                if (items.length === 0) {
+                    context.emit('allowClicks', true as boolean);
+                }
+                else {
+                    for await (const item of items) {
+                        await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                        .then(res => { return res.json() })
+                            .then(res => {
+                                const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
+                                topTracks.value.push(name);
+                                if (topTracks.value.length === items.length) {
+                                    top5.value = items.slice(0,items.length);
+                                    context.emit('allowClicks', true as boolean);
+                                }
+                            })
+                            .catch(err => console.table(err))
+                        .catch(err => console.table(err));
+                    }
                 }
             });
         });

@@ -1,12 +1,10 @@
 1. generate colors for Synesthesia by:
     a. using these:
-        ex: Tamagotchi by Omar Apollo -> rgb(192, 141, 0), rgb(131, 44, 29), rgb(32, 21, 211)
-            i.      danceability:       0.0 - 1.0 : r_1 => 0.755 / 1
-            ii.     energy:             0.0 - 1.0 : r_2 => 0.514 / 1
-            iii.    liveliness:         0.0 - 1.0 : r_3 => 0.128 / 1
-            iv.     valence:            0.0 - 1.0 : g_1 => 0.553 / 1
-            v.      speechiness:        0.0 - 1.0 : g_2 => 0.173 / 1
-            vi.     acousticness:       0.0 - 1.0 : g_3 => 0.083 / 1
-            vii.    instrumentalness:   0.0 - 1.0 : b_1 => 0.0   / 1
-            vii.    loudness:           -60 - 0   : b_2 => -6.942 / -60
-            ix.     tempo:              50-150    : b_3 => ((133.1) - 50) / 100 
+        ex: Tamagotchi by Omar Apollo -> rgb(192, 131, 33), rgb(141, 44, 21)
+            i.      danceability:       0.0 - 1.0 : r_1 => 0.755 / 1 * 255
+            ii.     energy:             0.0 - 1.0 : g_1 => 0.514 / 1 * 255
+            iii.    liveness:         0.0 - 1.0 : b_1 => 0.128 / 1 * 255
+            iii.    POPULARITY:       0 - 100 : B_1 => 77 / 100 * 255
+            iv.     valence:            0.0 - 1.0 : r_2 => 0.553 / 1 * 255
+            v.      speechiness:        0.0 - 1.0 : g_2 => 0.173 / 1 * 255
+            vi.     acousticness:       0.0 - 1.0 : b_2 => 0.083 / 1 * 255

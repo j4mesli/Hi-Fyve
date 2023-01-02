@@ -1,8 +1,8 @@
 <template>
   <h1>Touchdown!</h1>
   <button @click="data">Get Tokens</button>
-  <button v-if="vanilla" @click="vanilla = !vanilla">Vanilla</button>
-  <button v-if="!vanilla" @click="vanilla = !vanilla">P5.js</button>
+  <button id="change-to-p5" v-if="vanilla" @click="vanilla = !vanilla">Vanilla</button>
+  <button id="change-to-Canvas" v-if="!vanilla" @click="vanilla = !vanilla">P5.js</button>
   <form @submit.prevent="getTop10">
     <label for="Request Type">Request Type:</label>
     <select id="Request Type" v-model="request_type" required>

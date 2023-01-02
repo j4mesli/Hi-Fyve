@@ -97,30 +97,44 @@ export default defineComponent({
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    for await (const item of items) {
-                    await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
-                        .then(res => { return res.json() })
-                            .then(res => {
-                                let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
-                                const attrs: Array<Array<string>> = attributeToColor(attributes);
-                                track_attrs.value.push(attrs);
-                                if (track_attrs.value.length === (data.value.length+5)) {
-                                    data.value.push(...items.slice(0,items.length));
-                                    context.emit('allowClicks', true as boolean);
-                                    hideButton.value = !hideButton.value;
-                                    // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
-                                    // automatically closes on loading of additional cards and doesn't close the card contents with it
-                                    if (bottomElement.classList.contains('open')) {
-                                        bottomElement.children[1].classList.toggle('minimized');
-                                        for (let i = 2; i < bottomElement.children[0].children.length; i++) {
-                                            bottomElement.children[0].children[i].classList.toggle('hide-child-element');
-                                            bottomElement.children[0].classList.toggle('closed');
+                    if (items.length === 0) {
+                        context.emit('allowClicks', true as boolean);
+                        // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                        // automatically closes on loading of additional cards and doesn't close the card contents with it
+                        if (bottomElement.classList.contains('open')) {
+                            bottomElement.children[1].classList.toggle('minimized');
+                            for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                bottomElement.children[0].classList.toggle('closed');
+                            }
+                        }
+                    }
+                    else {
+                        for await (const item of items) {
+                            await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                                .then(res => { return res.json() })
+                                    .then(res => {
+                                        let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
+                                        const attrs: Array<Array<string>> = attributeToColor(attributes);
+                                        track_attrs.value.push(attrs);
+                                        if (track_attrs.value.length === (data.value.length+items.length)) {
+                                            data.value.push(...items.slice(0,items.length));
+                                            context.emit('allowClicks', true as boolean);
+                                            hideButton.value = !hideButton.value;
+                                            // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                                            // automatically closes on loading of additional cards and doesn't close the card contents with it
+                                            if (bottomElement.classList.contains('open')) {
+                                                bottomElement.children[1].classList.toggle('minimized');
+                                                for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                                    bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                                    bottomElement.children[0].classList.toggle('closed');
+                                                }
+                                            }
                                         }
-                                    }
-                                }
-                            })
-                            .catch(err => error.value = err)
-                        .catch(err => error.value = err);
+                                    })
+                                    .catch(err => error.value = err)
+                                .catch(err => error.value = err);
+                        }
                     }
                 })
                 .catch(err => error.value = err);
@@ -155,20 +169,25 @@ export default defineComponent({
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
-                            .then(res => { return res.json() })
-                                .then(res => {
-                                    let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
-                                    const attrs: Array<Array<string>> = attributeToColor(attributes);
-                                    track_attrs.value.push(attrs);
-                                    if (track_attrs.value.length === items.length) {
-                                        data.value = items.slice(0,items.length);
-                                        context.emit('allowClicks', true as boolean);
-                                    }
-                                })
-                                .catch(err => error.value = err)
-                            .catch(err => error.value = err);
+                    if (items.length === 0) {
+                        context.emit('allowClicks', true as boolean);
+                    }
+                    else {
+                        for await (const item of items) {
+                            await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                                .then(res => { return res.json() })
+                                    .then(res => {
+                                        let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
+                                        const attrs: Array<Array<string>> = attributeToColor(attributes);
+                                        track_attrs.value.push(attrs);
+                                        if (track_attrs.value.length === items.length) {
+                                            data.value = items.slice(0,items.length);
+                                            context.emit('allowClicks', true as boolean);
+                                        }
+                                    })
+                                    .catch(err => error.value = err)
+                                .catch(err => error.value = err);
+                        }
                     }
                 })
                 .catch(err => error.value = err);

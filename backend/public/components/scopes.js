@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.scopes = void 0;
-exports.scopes = [
+export const scopes = [
     'ugc-image-upload',
     'user-read-playback-state',
     'user-modify-playback-state',

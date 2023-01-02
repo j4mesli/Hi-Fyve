@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw, NavigationGuardNext, Ro
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import MyHiFyve from '../views/MyHiFyve.vue'
+import SynesthesiaMain from '../views/SynesthesiaMain.vue'
 
 // use main.css
 import '../../public/main.css';
@@ -24,19 +25,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'home',
     component: HomeView,
-    beforeEnter: refreshOnLoad,
   },
   {
     path: '/about',
     name: 'about',
     component: AboutView,
-    beforeEnter: refreshOnLoad,
   },
   {
     path: '/MyHiFyve',
     name: 'MyHiFyve',
     component: MyHiFyve,
-    beforeEnter: refreshOnLoad,
+  },
+  {
+    path: '/Synesthesia',
+    name: 'Synesthesia',
+    component: SynesthesiaMain,
   }
 ]
 

@@ -47,14 +47,14 @@ export default defineComponent({
 }
 .Hi-Fyve-Content-wrapper {
     background-image: var(--hi-fyve-wrapper);
+    animation: bg-animation 30s infinite alternate;
+    background-size: 400%;
+    background-position: left;
     margin: 20px auto;
     width: 95%;
     min-height: 600px;
     border-radius: 40px;
-    background-position: left;
     transition: 0.5s ease-in-out;
-    animation: bg-animation 30s infinite alternate;
-    background-size: 400%;
     display: flex;
     justify-content: space-evenly;
     align-items: center;

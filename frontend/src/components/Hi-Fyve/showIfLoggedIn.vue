@@ -111,7 +111,6 @@ h1 {
     transition: .2s ease-in-out;
 }
 nav a::before {
-    /* Highlight color */
     box-shadow: 0 0 8px #fff;
     background-color: #D3499A;
     content: "";

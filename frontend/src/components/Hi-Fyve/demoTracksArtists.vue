@@ -76,6 +76,7 @@ p.button {
     animation: bg-animation 30s infinite alternate;
     font-size: 1rem;
     font-weight: 500;
+    cursor: pointer;
 }
 p.button:hover {
     background-image: var(--home-panel-sync-button-hover);

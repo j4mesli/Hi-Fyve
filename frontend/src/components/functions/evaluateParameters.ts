@@ -52,7 +52,7 @@ export const evaluateParameters = (attrs: Record<string, unknown>) => {
         valence: 
             valence.valence >= .89 ? [ 'Radiant', 2 ]
             : valence.valence >= .70 ? [ 'Jovial', 1]
-            : valence.valence >= .51 ? [ 'Upbeat', 0 ]
+            : valence.valence >= .51 ? [ 'Bright', 0 ]
             : valence.valence >= .28 ? [ 'Stirring', -1 ]
             : valence.valence >= .05 ? [ 'Melancholic', -2 ]
             : [ 'Blue', -3 ]

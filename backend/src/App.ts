@@ -6,14 +6,19 @@ import crypto from "crypto";
 import path from "path";
 import fs from "fs";
 import cors from "cors";
+import invert, { Color } from "invert-color";
+import * as ntc from 'ntc-ts'; // primary import
+// import * as ntcts from './functions/ntc-ts/index'; // alternate import
 
 // types/interfaces/components
-import { scopes } from "./components/scopes";
+import { scopes } from "./components/scopes.js";
 import { credentials } from "./types/credentials";
 import { getTopXQuery } from "./types/getTopXQuery";
 import { getMyInfo } from "./types/getMyInfo";
-import colors from "./json/genre-color.json";
-import colorToName from "./json/color-name.json";
+import { rgbToHex } from "./functions/RGBtoHex.js";
+import colors from "./json/genre-color.json" assert { type: 'json' };
+import colorToName from "./json/color-name.json" assert { type: 'json' };
+import { shuffleArray } from "./functions/shuffleArray.js";
 
 // init server
 const app = express();
@@ -24,9 +29,10 @@ app.listen(3000, 'localhost', () => {
 
 // middleware
 app.use(morgan('dev'));
+ntc.initColors(ntc.ORIGINAL_COLORS);
 
 // init spotify access
-var config = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'json', 'access.json'), 'utf8'));
+var config = JSON.parse(fs.readFileSync(path.join(path.resolve(), 'json', 'access.json'), 'utf8'));
 const state = crypto.randomBytes(16).toString('hex');;
 let creds: credentials = {
     clientId: config.clientId,
@@ -227,7 +233,7 @@ app.get('/colors', async (req, res) => {
     }
 });
 
-//// get color: name .json
+//// get color: name .json HEX ONLY
 app.get('/nameForColor', async (req, res) => {
     if (req.query.color) {
         const color = req.query.color as string;
@@ -248,3 +254,114 @@ app.get('/nameForColor', async (req, res) => {
         }
     }
 });
+
+//// get song obj for Synesthesia
+app.get('/synesthesia', async (req, res) => {
+    const firstRes = res;
+    if (req.query.access_token && req.query.request_type && req.query.time_range && req.query.limit && req.query.offset) {
+        try {
+            const params: getTopXQuery = {
+                access_token: req.query.access_token as string,
+                request_type: req.query.request_type as string,
+                time_range: req.query.time_range as string,
+                limit: req.query.limit as string, 
+                offset: req.query.offset as string, 
+            }
+            const headers = { 
+                'Content-Type': 'application/json', 
+                'Accept': 'application/json',
+                'Authorization': 'Bearer ' + params.access_token, 
+            };
+            const url = 'https://api.spotify.com/v1/me/top/' + params.request_type + '?time_range=' + params.time_range + '&limit=' + params.limit + '&offset=' + params.offset;
+            await fetch(url, { headers: headers })
+                .then(res => res.json())
+                    .then(async data => {
+                        const random_selection: number = Math.floor(Math.random() * data.items.length);
+                        interface synesthesiaOutput {
+                            top_name: string;
+                            top_artists: string[];
+                            top_image: string;
+                            top_mp3: string;
+                            color1: number[];
+                            color1_hex: string;
+                            color1_name: string;
+                            color2: number[];
+                            color2_hex: string;
+                            color2_name: string;
+                        }
+                        const output: synesthesiaOutput = {
+                            top_name: data.items[random_selection].name,
+                            top_artists: [] as string[],
+                            top_image: data.items[random_selection].album.images[0].url,
+                            top_mp3: data.items[random_selection].preview_url,
+                            color1: [0, 0, 0] as number[],
+                            color1_hex: '',
+                            color1_name: '',
+                            color2: [0, 0, 0] as number[],
+                            color2_hex: '',
+                            color2_name: '',
+                        };
+                        data.items[random_selection].artists.forEach((el: { name: string }) => {
+                            output.top_artists.push(el.name);
+                        });
+                        console.table(output);
+                        // loop through songs and get colors
+                        // const masterData = data.items;
+                        for (let i = 0; i <= Object.keys(data.items).length; i++) {
+                            if (i === Object.keys(data.items).length) {
+                                const color2_array = output.color2.map(x => Math.round(x / (Object.keys(data.items).length * 2) * 255));
+                                // output.color2 = shuffleArray(color2_array) as number[];
+                                output.color2 = color2_array;
+                                output.color2_hex = rgbToHex(output.color2);
+                                output.color2_name = ntc.getColorName(output.color2_hex).name;
+                                output.color1 = invert.asRgbArray(output.color2 as Color);
+                                output.color1_hex = rgbToHex(output.color1);
+                                output.color1_name = ntc.getColorName(output.color1_hex).name;
+                                firstRes.send(output);
+                            }
+                            else {
+                                await fetch('http://localhost:3000/trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
+                                    .then(res => res.json())
+                                        .then(data => {
+                                            // update color1 r,g,b
+                                            output.color2[0] += data.valence + data.liveness;
+                                            output.color2[1] += data.danceability + data.speechiness;
+                                            output.color2[2] += data.energy + data.acousticness;
+                                        })
+                                        .catch(err => firstRes.send(err))
+                                    .catch(err => firstRes.send(err));
+                            }
+                        }
+                     })
+                    .catch(err => firstRes.send(err))
+                .catch(err => firstRes.send(err));
+        }
+        catch(err) {
+            firstRes.send(err);
+        }
+    }
+    else {
+        res.send('CHECK TOKEN');
+    }
+});
+
+//// detailed track analysis
+app.get('/trackAnalysis', async (req, res) => {
+    if (req.query.access_token && req.query.id) {
+        const firstRes = res;
+        const headers = { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token as string, 
+        };
+        const url = 'https://api.spotify.com/v1/audio-features/' + req.query.id as string;
+        await fetch(url, { headers: headers })
+            .then(res => res.json())
+                .then(data => res.send(data))
+                .catch(err => firstRes.send(err))
+            .catch(err => firstRes.send(err));
+    }
+    else {
+        res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+})

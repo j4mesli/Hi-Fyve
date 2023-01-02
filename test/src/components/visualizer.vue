@@ -96,7 +96,7 @@ export default {
 
                         // one for loop for circle visualizer
                         for (let i = 0; i < bufferLength.value; i++) {
-                            barHeight.value = dataArray.value[i]*1.5 + 10;
+                            barHeight.value = dataArray.value[i]*1.75 + 20;
                             ctx.value.save();
                             ctx.value.translate(canvas.value.width/2, canvas.value.height/2);
                             // ROTATION ONLY WORKS IN RADIANS

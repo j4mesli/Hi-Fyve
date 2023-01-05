@@ -1,10 +1,69 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
     <LoadingSpinnerVue v-if="songString === ''" />
-    <div class="canvas-buttons" v-if="songString !== ''">
+    <div class="type-selector">
+        <span id="go-back" @click="!showVisualizer && songString !== '' ? handleCustomizationChange() : ''" class="material-symbols-outlined go-back" :class="{ off: showVisualizer || songString === '' }">chevron_left</span>
+        <h3>{{ showVisualizer ? "Your Audio Visualizer" : "Your Color Board" }}</h3>
+        <span id="go-forward" @click="showVisualizer && songString !== '' ? handleCustomizationChange() : ''" class="material-symbols-outlined go-forward" :class="{ off: !showVisualizer || songString === '' }">chevron_right</span>
+    </div>
+    <div class="polaroid-colors" v-if="(c1.length > 0 && c2.length > 0) && !showVisualizer">
+        <strong><h1 class="chalk-writing">YOUR COLOR BOARD</h1></strong>
+        <div class="polaroid-pictures">
+            <div class="polaroid-color-wrapper" id="gradient-color-1">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[0].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[0].name }}</h3>
+                    <p>{{ gradient[0].hex }}</p>
+                </div>
+            </div>
+            <div class="polaroid-color-wrapper" id="gradient-color-2">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[1].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[1].name }}</h3>
+                    <p>{{ gradient[1].hex }}</p>
+                </div>
+            </div>
+            <div class="polaroid-color-wrapper" id="gradient-color-3">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[2].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[2].name }}</h3>
+                    <p>{{ gradient[2].hex }}</p>
+                </div>
+            </div>
+            <div class="polaroid-color-wrapper" id="gradient-color-4">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[3].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[3].name }}</h3>
+                    <p>{{ gradient[3].hex }}</p>
+                </div>
+            </div>
+            <div class="polaroid-color-wrapper" id="gradient-color-5">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[4].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[4].name }}</h3>
+                    <p>{{ gradient[4].hex }}</p>
+                </div>
+            </div>
+            <div class="polaroid-color-wrapper" id="gradient-color-6">
+                <div class="thumbtack" :style="{ 'background-color': Math.ceil(Math.random()*2) === 2 ? 'rgb(225, 0, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(220, 220, 0)' : Math.ceil(Math.random()*2) === 2 ? 'rgb(0, 200, 100)' : 'rgb(0, 118, 225)'}"></div>
+                <div class="polaroid-color" :style="{ 'background-color': gradient[5].hex }"></div>
+                <div class="polaroid-caption">
+                    <h3>{{ gradient[5].name }}</h3>
+                    <p>{{ gradient[5].hex }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="canvas-buttons" v-if="songString !== '' && showVisualizer">
         
     </div>
-    <div class="synesthesia-gradient" :style="{ 'background-image': `linear-gradient(to top right, ${gradient[0].hex}, ${gradient[1].hex}, ${gradient[2].hex}, ${gradient[3].hex}, ${gradient[4].hex}, ${gradient[5].hex})` }" v-if="c1.length > 0 && c2.length > 0"></div>
-    <div id="canvas-wrapper" class="canvas-wrapper">
+    <!-- <div class="synesthesia-gradient" :style="{ 'background-image': `linear-gradient(to top right, ${gradient[0].hex}, ${gradient[1].hex}, ${gradient[2].hex}, ${gradient[3].hex}, ${gradient[4].hex}, ${gradient[5].hex})` }" v-if="c1.length > 0 && c2.length > 0"></div> -->
+    <div id="canvas-wrapper" class="canvas-wrapper" v-if="showVisualizer">
         
         <div class="canvas-overlay" v-if="songString !== ''">
             <span class="material-symbols-outlined overlay-symbols" v-if="!play_pause">pause</span>
@@ -28,8 +87,8 @@ import { synesthesiaOutput } from '../interfaces/synesthesiaOutput';
 import { refreshAccessToken } from '../functions/refreshAccessToken';
 import { recursiveDFSofHTMLElemChildren } from '../functions/recursiveDFSofHTMLElemChildren';
 import * as ntcts from '../functions/ntc-ts/index';
-import p5library from 'p5';
 import * as Color from 'color';
+import p5library from 'p5';
 declare var p5: any;
 
 export default defineComponent({
@@ -43,6 +102,7 @@ export default defineComponent({
     },
     setup(props) {
         // properties
+        const showVisualizer = ref(true);
         const obj = ref({}) as Ref<synesthesiaOutput>;
         const c1 = ref([]) as Ref<number[]>;
         const c2 = ref([]) as Ref<number[]>;
@@ -54,7 +114,15 @@ export default defineComponent({
         const songTitle = ref('');
         const singer = ref([]) as Ref<string[]>;
         let myp5: unknown = null;
+        let player: any = null;
         ntcts.initColors(ntcts.ORIGINAL_COLORS);
+
+        // handles synesthesia swap
+        const handleCustomizationChange = () => {
+            showVisualizer.value = !showVisualizer.value;
+            if (showVisualizer.value) setTimeout(() => myp5 = new p5(sketch, document.getElementById('canvas-wrapper') as HTMLElement), 100);
+            else player.remove(); 
+        }
 
         // get the synesthesia construction object from backend
         refreshAccessToken((sessionStorage.refresh_token as string))
@@ -86,7 +154,6 @@ export default defineComponent({
                         gradient.value.push({ name: ntcts.getColorName(Color.rgb(c2.value).hsl().saturate(1).hex()).name, hex: Color.rgb(c2.value).hsl().saturate(1).hex() });
                         gradient.value.push({ name: ntcts.getColorName(Color.rgb(c2.value).hsl().saturate(2).hex()).name, hex: Color.rgb(c2.value).hsl().saturate(2).hex() });
                         console.table(gradient.value);
-                        console.table(obj.value);
                         fetch(url.value)
                             .then(res => res.blob())
                                 .then(blob => {
@@ -142,6 +209,8 @@ export default defineComponent({
 
         // instantiate new p5 with function
         let sketch = (p: any) => {
+            player = p;
+            console.log(typeof player, typeof p)
             class Particle {
                 pos: p5library.Vector;
                 vel: any;
@@ -279,7 +348,7 @@ export default defineComponent({
                 const littlenav = document.querySelector('#little-router') as HTMLElement;
                 const inBigNav: boolean = bignav !== null ? recursiveDFSofHTMLElemChildren(bignav.children, e.target as HTMLElement) : false;
                 const inLittleNav: boolean = littlenav !== null ? recursiveDFSofHTMLElemChildren(littlenav.children, e.target as HTMLElement) : false;
-                if (inBigNav || inLittleNav) { 
+                if (inBigNav || inLittleNav || ((e.target as HTMLElement).id === "go-back") && showVisualizer.value) { 
                     song.pause(); 
                     p.remove(); 
                 }
@@ -325,12 +394,119 @@ export default defineComponent({
             });
         }
         
-        return { props, songString, myp5, play_pause, imageurl, songTitle, singer, c1, c2, Color, gradient };
+        return { props, showVisualizer, handleCustomizationChange, songString, myp5, play_pause, imageurl, songTitle, singer, c1, c2, Color, gradient };
     },
 })
 </script>
 
 <style>
+span.go-back.off, span.go-forward.off, .off { 
+    opacity: .5;
+    cursor: not-allowed;
+}
+span.go-back:hover, span.go-forward:hover {
+    transform: translateY(1px);
+    box-shadow: 0 0 8px #ddd;
+}
+span.go-back.off:hover, span.go-forward.off:hover {
+    transform: none;
+    box-shadow: none;
+}
+span.go-back, span.go-forward {
+    border: 1px solid rgb(69, 69, 69);
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
+    color: #ddd;
+    border-radius: 60px;
+    padding: 4px;
+    font-weight: 600;
+    font-size: 30px;
+    cursor: pointer;
+    transition: .05s ease-in-out;
+}
+.type-selector {
+    margin: -10px auto 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    min-width: 40%;
+    height: 10%;
+}
+.chalk-writing {
+    transform: translateY(-48px) rotate(-2deg);
+    font-size: 64px;
+    font-family: 'Caveat';
+}
+.thumbtack {
+    height: 16px;
+    width: 16px;
+    border-radius: 20px;
+    margin: -12px auto 8px;
+    box-shadow: 2px 2px rgba(0,0,0,0.5);
+}
+.polaroid-caption p {
+    margin: 4px auto 0;
+}
+.polaroid-caption h3 {
+    margin: 10px auto 0;
+}
+.polaroid-caption {
+    padding: 0;
+    margin: 0;
+    color: rgb(60, 60, 60);
+}
+.polaroid-color {
+    width: 200px;
+    height: 180px;
+}
+.polaroid-color-wrapper {
+    transition: .32s ease-in-out;
+    border-radius: 1px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 16px 16px;
+    background-color: #f5f5f5;
+    transform: translateY(-18%) rotate(5deg);
+    box-shadow: 6px 5px 3px rgba(0,0,0,0.5);
+    transform-origin: top;
+}
+.polaroid-color-wrapper:nth-child(even) {
+    transform: translateY(18%) rotate(-5deg);
+}
+.polaroid-color-wrapper:nth-child(2n+2) {
+    box-shadow: 6px 7px 3px rgba(0,0,0,0.5);
+}
+.polaroid-color-wrapper:nth-child(2) {
+    box-shadow: 6px 6px 3px rgba(0,0,0,0.5);
+}
+.polaroid-color-wrapper:hover {
+    transform: translateY(-18%) rotate(0deg);
+    box-shadow: 5px 5px 3px rgba(0,0,0,0.5);
+}
+.polaroid-color-wrapper:nth-child(even):hover {
+    transform: translateY(18%) rotate(0deg);
+}
+.polaroid-pictures {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+    transform: translateY(-32px);
+}
+.polaroid-colors {
+    width: 95%;
+    height: 640px;
+    margin: auto auto 40px auto;
+    transition: .2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-image: linear-gradient(to bottom right, #c19a6b, #c18a6b, #ce9f6f);
+    border: 16px solid #8b6944;
+}
 .synesthesia-gradient:hover {
     opacity: 1;
 }

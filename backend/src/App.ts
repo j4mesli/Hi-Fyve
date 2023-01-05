@@ -7,8 +7,8 @@ import path from "path";
 import fs from "fs";
 import cors from "cors";
 import invert, { Color } from "invert-color";
-import * as ntc from 'ntc-ts'; // primary import
-// import * as ntcts from './functions/ntc-ts/index'; // alternate import
+// import * as ntc from 'ntc-ts'; // primary import
+import * as ntc from './functions/ntc-ts/index.js'; // alternate import
 
 // types/interfaces/components
 import { scopes } from "./components/scopes.js";

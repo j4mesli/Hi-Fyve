@@ -1,4 +1,4 @@
-import { CACHED_COLOR, COLOR, FORMATTED_COLOR } from './types'
+import { CACHED_COLOR, COLOR, FORMATTED_COLOR } from './types';
 
 export let cachedColors: CACHED_COLOR = {}
 export let colors: COLOR[] = [['000000', 'Black']]

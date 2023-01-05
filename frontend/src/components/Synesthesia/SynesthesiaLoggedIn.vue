@@ -1,7 +1,7 @@
 <template>
     <div class="logged-in-synesthesia-wrapper">
         <h1>Introducing <span>Synesthesia🎜</span></h1>
-        <h2><span><strong>Let's get started.</strong></span></h2>
+        <h2 v-if="!isGenerating"><span><strong>Let's get started.</strong></span></h2>
         <div class="select-menu" v-if="!isGenerating">
             <div class="type-selector">
                 <span id="go-back" @click="!isCustomize ? handleCustomizationChange() : ''" class="material-symbols-outlined go-back" :class="{ off: isCustomize }">chevron_left</span>

@@ -1,4 +1,4 @@
-export type COLOR = Array<string | number>
+export type COLOR = Array<string | number>;
 
 export interface FORMATTED_COLOR {
   exactMatch: boolean

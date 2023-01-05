@@ -1,4 +1,4 @@
-import { COLOR } from '../types'
+import { COLOR } from '../types';
 
 export const ORIGINAL_COLORS: COLOR[] = [
   ['000000', 'Black'],

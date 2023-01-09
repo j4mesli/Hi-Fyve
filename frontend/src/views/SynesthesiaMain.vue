@@ -15,7 +15,7 @@ export default defineComponent({
     },
     setup() {
         const showHide = ref(false);
-        switch (sessionStorage.length) {
+        switch (localStorage.length) {
             case 0:
                 showHide.value = false;
                 break;

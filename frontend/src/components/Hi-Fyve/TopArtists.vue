@@ -127,7 +127,7 @@ export default defineComponent({
                     }
                     else {
                         for await (const item of items) {
-                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
@@ -173,7 +173,7 @@ export default defineComponent({
                     }
                     else {
                         for await (const item of items) {
-                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                            await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
@@ -229,7 +229,7 @@ export default defineComponent({
                 }
                 else {
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                        await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                         .then(res => { return res.json() })
                             .then(res => {
                                 const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;

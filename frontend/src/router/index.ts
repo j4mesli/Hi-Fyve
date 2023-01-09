@@ -10,8 +10,8 @@ import { refreshAccessToken } from '@/components/functions/refreshAccessToken';
 
 // route guard to refresh token on every page load if logged in
 const refreshOnLoad = async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  if (sessionStorage.length > 0) {
-    await refreshAccessToken(sessionStorage.refresh_token)
+  if (localStorage.length > 0) {
+    await refreshAccessToken(localStorage.refresh_token)
     .then(res => next())
     .catch(err => next());
   }

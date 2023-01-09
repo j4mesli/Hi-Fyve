@@ -1,7 +1,5 @@
 <template>
-    <div class="example-synesthesia">
-        <h1>example synesthesia goes here</h1>
-    </div>
+    <img src="../../../../public/examplesynesthesia.jpeg">
 </template>
 
 <script lang="ts">
@@ -15,5 +13,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+img {
+    width: 300px;
+    height: 500px;
+    border-radius: 5px;
+    box-shadow: 0 0 12px #ddd;
+}
 </style>

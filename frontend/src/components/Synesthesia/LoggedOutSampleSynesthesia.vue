@@ -32,6 +32,7 @@ export default defineComponent({
         const songTitle = ref('スカー');
         const singer = ref('キタニタツヤ');
         let myp5: unknown = null;
+        let player;
 
         // gets audio from url asyncronously w/ mpeg blob -> x-wav blob
         fetch(url.value)
@@ -63,20 +64,15 @@ export default defineComponent({
             }
             document.addEventListener('mousemove', e => {
                 const elem = document.elementFromPoint(e.clientX, e.clientY);
-                let parent: HTMLElement = document.querySelector('div.canvas-wrapper') as HTMLElement;
-                if (elem) {
-                    if (
-                        // if user hovers the canvas itself
-                        (elem as HTMLElement).nodeName.toLowerCase() === 'canvas' 
-                        // if user hovers the canvas-overlay parent elem
-                        || (elem.classList.length >= 1 && (elem as HTMLElement).classList[0].toLowerCase() === 'canvas-overlay')
-                        // if user hovers an element of the overlay (recursive DFS to see if elem is part of canvas-overlay children)
-                        || recursiveDFSofHTMLElemChildren((document.querySelector('div.canvas-overlay') as HTMLElement).children, e.target as HTMLElement)) {
-                        const overlay = parent.children[0] as HTMLElement;
+                let wrapper = document.querySelector('div.canvas-overlay');
+                if (elem && wrapper) {
+                    //   if user hovers the canvas itself        OR  if user hovers the canvas-overlay parent elem    OR  if user hovers over a child elem of the wrapper
+                    if (elem.nodeName.toLowerCase() === 'canvas' || elem.className.toLowerCase() === 'canvas-overlay' || recursiveDFSofHTMLElemChildren(wrapper.children, elem, wrapper)) {
+                        const overlay = wrapper as HTMLElement;
                         overlay.style.opacity = '1';
                     }
                     else {
-                        if (play_pause.value) ((parent as HTMLElement).children[0] as HTMLElement).style.opacity = '0';
+                        if (play_pause.value) (wrapper as HTMLElement).style.opacity = '0';
                     }
                 }
             });
@@ -84,6 +80,7 @@ export default defineComponent({
 
         // instantiate new p5 with function
         let sketch = (p: any) => {
+            player = p;
             class Particle {
                 pos: p5library.Vector;
                 vel: any;
@@ -193,7 +190,9 @@ export default defineComponent({
                         particles.splice(i, 1);
                     }
                 }
-                if (!song.isPlaying() && play_pause.value) song.play();
+                if (!song.isPlaying() && play_pause.value) {
+                    song.play();
+                }
             }
 
             p.mouseClicked = (e: Event) => {
@@ -212,14 +211,17 @@ export default defineComponent({
                         play_pause.value = true;
                         song.play();
                         p.loop();
+                        // p.saveGif('mySketch', 5);
                     }
                 }
             }
 
             p.mousePressed = (e: Event) => {
-                if (e.target instanceof Element && e.target.id === 'navbar') { 
-                    song.pause(); 
-                    p.remove(); 
+                if (e.target instanceof Element) { 
+                    if (recursiveDFSofHTMLElemChildren(document.getElementById("navbar")!.children, e.target) && e.target.className !== "material-symbols-outlined") {
+                        song.pause(); 
+                        p.remove(); 
+                    }
                 }
             }
 

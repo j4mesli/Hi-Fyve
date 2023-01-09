@@ -13,8 +13,8 @@ export default defineComponent({
     LogoAndNavVue,
   },
   setup() {
-    if (sessionStorage.access_token && sessionStorage.refresh_token) {
-      if (sessionStorage.access_token === 'undefined' || sessionStorage.refresh_token === 'undefined') {
+    if (localStorage.access_token && localStorage.refresh_token) {
+      if (localStorage.access_token === 'undefined' || localStorage.refresh_token === 'undefined') {
         handleLogIn();
       }
     }

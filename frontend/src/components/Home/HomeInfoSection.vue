@@ -21,17 +21,6 @@
         </div>
         <div class="block">
             <div class="info">
-                <h1 class="ebtr">Everything But The Rain 🌧️</h1>
-                <div class="body-paragraph">
-                    <h4>Want to get even more out of your music listening experience?</h4>
-                    <h4>Our analytics system provides detailed analysis of your online music habits,<br>including your favorite songs and artists, listening patterns, and more.</h4>
-                    <h4>With this feature, you can track and compare your listening habits over time, letting you learn everything about your music tastes.</h4>
-                </div>
-            </div>
-            <ExampleAnalyticsVue />
-        </div>
-        <div class="block bottom">
-            <div class="info">
                 <h1>Introducing <span>Synesthesia🎜</span></h1>
                 <div class="body-paragraph">
                     <h4>With Synesthesia, you can visualize your audio in a whole new way.</h4>
@@ -39,7 +28,22 @@
                     <h4> This pattern allows you to see your music in a whole new way by letting you visualize your songs.<br>Try Synesthesia and truly see how your music sounds!</h4>
                 </div>
             </div>
-            <ExampleSynesthesiaVue />
+            <div class="info" style="height: 500px;">
+                <ExampleSynesthesiaVue />
+            </div>
+        </div>
+        <div class="block bottom">
+            <div class="info">
+                <h1 class="ebtr">Everything But The Rain 🌧️</h1>
+                <div class="body-paragraph">
+                    <h4>Want to get even more out of your music listening experience?</h4>
+                    <h4>Our analytics system provides detailed analysis of your online music habits,<br>including your favorite songs and artists, listening patterns, and more.</h4>
+                    <h4>With this feature, you can track and compare your listening habits over time, letting you learn everything about your music tastes.</h4>
+                </div>
+            </div>
+            <div class="info">
+                <ExampleAnalyticsVue />
+            </div>
         </div>
     </div>
 </template>
@@ -63,9 +67,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.ebtr {
-    color: var(--ebtr);
-}
 /*
 .rengoku {
     background-image: var(--rengoku);
@@ -76,6 +77,9 @@ export default defineComponent({
     color: transparent;
 }
 */
+.ebtr {
+    color: var(--ebtr);
+}
 span {
     background-image: var(--info-text-synesthesia);
     background-position: left;

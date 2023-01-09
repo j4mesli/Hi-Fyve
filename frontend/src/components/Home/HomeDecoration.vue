@@ -47,11 +47,11 @@ export default defineComponent({
         const error = ref(null);
         const spinner = ref(false);
         const colors = ref(null);
-        const access_token: Ref<string | null> = ref(sessionStorage.access_token as string ?? null);
-        const refresh_token: Ref<string | null> = ref(sessionStorage.refresh_token as string ?? null);
+        const access_token: Ref<string | null> = ref(localStorage.access_token as string ?? null);
+        const refresh_token: Ref<string | null> = ref(localStorage.refresh_token as string ?? null);
         try {
             // try catch needs to be accessible outside of this block
-            var user = ref(JSON.parse(sessionStorage.user));
+            var user = ref(JSON.parse(localStorage.user));
         }
         catch {
             user = ref({ images: [{ url: '' }] });
@@ -59,7 +59,7 @@ export default defineComponent({
 
         // show/hide login button
         const hasTokens = ref(false);
-        if (sessionStorage.length !== 0) {
+        if (localStorage.length !== 0) {
             hasTokens.value = true;
         }
         else {
@@ -82,16 +82,16 @@ export default defineComponent({
 
         // get user info function
         const getUserInfo = async () => {
-            await fetch('http://localhost:3000/me?access_token=' + sessionStorage.access_token)
+            await fetch('http://localhost:3000/me?access_token=' + localStorage.access_token)
                 .then(res => { return res.json(); })
                     .then(data => {
                         user.value = data;
-                        sessionStorage.setItem("user", JSON.stringify(user.value));
+                        localStorage.setItem("user", JSON.stringify(user.value));
                     })
                     .catch(err => error.value = err)
                 .catch(err => {
                     if (err.body.status === 401 as number | string) {
-                        refreshAccessToken(sessionStorage.refresh_token);
+                        refreshAccessToken(localStorage.refresh_token);
                         getUserInfo();
                     }
                     else {
@@ -107,7 +107,7 @@ export default defineComponent({
                 .then(res => { return res.json() })
                     .then(data => {
                         colors.value = data;
-                        sessionStorage.setItem("colors", JSON.stringify(user.value));
+                        localStorage.setItem("colors", JSON.stringify(user.value));
                     })
                     .catch(err => console.log(err))
                 .catch(err => console.log(err));
@@ -127,8 +127,8 @@ export default defineComponent({
 
                 // sets both token values in the session
                 if (access_token.value && refresh_token.value) {
-                    sessionStorage.setItem("access_token", access_token.value);
-                    sessionStorage.setItem("refresh_token", refresh_token.value);
+                    localStorage.setItem("access_token", access_token.value);
+                    localStorage.setItem("refresh_token", refresh_token.value);
                     await getUserInfo();
                     await getColors();
                     hasTokens.value = true;
@@ -139,7 +139,7 @@ export default defineComponent({
 
         // logout user
         const logout = () => {
-            sessionStorage.clear();
+            localStorage.clear();
             hasTokens.value = false;
             access_token.value = null;
             refresh_token.value = null;

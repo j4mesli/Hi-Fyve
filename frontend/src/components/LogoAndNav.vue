@@ -1,7 +1,7 @@
 <template>
     <header id="navbar">
         <div class="logo">
-            <router-link to="/"><img src="../../public/powered_by_spotify.png"></router-link>
+            <router-link to="/"><img src="../../public/logo.png"></router-link>
         </div>
         <nav v-if="(width > 1250)" id="big-router">
             <router-link to="/">Home</router-link>
@@ -70,7 +70,7 @@ export default defineComponent({
     transform: translate(-50%);
     margin-top: 8px;
     background: #212121;
-    z-index: 1;
+    z-index: 999;
 }
 .fade {
     opacity: 0%;

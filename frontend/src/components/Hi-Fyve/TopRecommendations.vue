@@ -67,7 +67,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -99,7 +99,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                    await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                    await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                         .then(res => { return res.json() })
                             .then(res => {
                                 let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -157,7 +157,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + sessionStorage.access_token)
+                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);

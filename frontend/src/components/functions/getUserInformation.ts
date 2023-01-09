@@ -3,11 +3,11 @@ import { refreshAccessToken } from "./refreshAccessToken";
 
 export const getUserInformation = async (params: handleUserInformation) => {
     // refresh the access tokens
-    await refreshAccessToken(sessionStorage.refresh_token);
+    await refreshAccessToken(localStorage.refresh_token);
 
     // url for fetch request
     const url = 'http://localhost:3000/gettopx?access_token='
-    + sessionStorage.access_token + '&request_type='
+    + localStorage.access_token + '&request_type='
     + params.request_type + '&time_range='
     + params.time_range + '&limit='
     + params.limit + '&offset='

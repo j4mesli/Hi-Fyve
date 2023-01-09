@@ -254,9 +254,40 @@ h1 {
 h2 {
     font-weight: 500;
 }
+@media (max-width: 1400px) {
+    .type-selector {
+        width: 60%;
+    }
+    .buttons {
+        width: 60%;
+    }
+    input[type="range"] {
+        width: 80%;
+    }
+}
 @media (max-width: 1000px) {
+    .type-selector {
+        width: 80%;
+    }
     h1 {
         font-size: 32px;
+    }
+    .buttons {
+        width: 80%;
+    }
+    input[type="range"] {
+        width: 80%;
+    }
+}
+@media (max-width: 450px) {
+    .type-selector {
+        width: 90%;
+    }
+    .buttons {
+        width: 90%;
+    }
+    input[type="range"] {
+        width: 100%;
     }
 }
 </style>

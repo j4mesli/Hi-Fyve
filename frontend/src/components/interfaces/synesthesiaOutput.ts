@@ -1,4 +1,5 @@
 export interface synesthesiaOutput {
+    top_x_songs: Array<{ name: string, artists: string[], image: string, mp3: string }>;
     top_name: string;
     top_artists: string[];
     top_image: string;

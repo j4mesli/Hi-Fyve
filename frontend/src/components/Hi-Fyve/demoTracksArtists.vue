@@ -1,22 +1,22 @@
 <template>
     <button v-if="(!spinner)" @click="login">
-            <div class="logo">
-                <img src="../../../public/spotify_logo.png">
-            </div>
-            <p class="button">Continue With Spotify</p>
+        <div class="logo">
+            <img src="../../../public/spotify_logo.png">
+        </div>
+        <p class="button">Continue With Spotify</p>
     </button>
     <LoadingSpinnerVue v-else />
     <div class="blurb">
         <h4>Hi-Fyve is the perfect tool for music enthusiasts who want to understand their listening habits in greater detail. Our service generates personalized analytics and statistics based on a user's online music activity, presenting the information in a visually appealing, minimalistic format. With Hi-Fyve, users can easily see their favorite artists and tracks, and get a deeper understanding of their music tastes. Give it a try and get to know your music listening habits like never before.</h4>
     </div>
-    <h3 style="margin-top: 90px;">What your Hi-Fyve could look like!</h3>
-    <div class="type-selector">
+    <h3 @click="showDemo = !showDemo" class="show-hide-demo" v-if="!showDemo">Click Here to See What Your Hi-Fyve could look like!</h3>
+    <div class="type-selector" v-if="showDemo">
         <span id="go-back" @click="item === 'Tracks' ? goBack() : ''" class="material-symbols-outlined" :class="{ off: item === 'Artists' }">chevron_left</span>
         <h2>Demo Top {{ item }}</h2>
         <span id="go-forward" @click="item === 'Artists' ? goForward() : ''" class="material-symbols-outlined" :class="{ off: item === 'Tracks' }">chevron_right</span>
     </div>
-    <demoArtistsVue v-if="item === 'Artists'"/>
-    <demoTracksVue v-else-if="item === 'Tracks'"/>
+    <demoArtistsVue v-if="item === 'Artists' && showDemo"/>
+    <demoTracksVue v-else-if="item === 'Tracks' && showDemo"/>
 </template>
 
 <script lang="ts">
@@ -36,6 +36,7 @@ export default defineComponent({
         const goBack = () => { item.value === 'Tracks' ? item.value = 'Artists' : '' };
         const goForward = () => { item.value === 'Artists' ? item.value = 'Tracks' : '' };
         const spinner = ref(false);
+        const showDemo = ref(false);
         // login function
         const login = async () => {
             spinner.value = true;
@@ -50,19 +51,22 @@ export default defineComponent({
             .catch(err => console.log(err));
         };
 
-        return { item, spinner, goBack, goForward, login };
+        return { item, spinner, goBack, goForward, login, showDemo,  };
     },
 })
 </script>
 
 <style scoped>
-@media (max-width: 1250px) {
-    .type-selector {
-        min-width: 80%;
-    }
-    span {
-        margin: auto 20px;
-    }
+.show-hide-demo {
+    margin: 90px; 
+    cursor: pointer;
+    color: black;
+    transition: .2s ease-in-out;
+}
+.show-hide-demo:hover {
+    transform: translateY(2px);
+    text-decoration: underline;
+    color: #f3f3f3;
 }
 .blurb {
     width: 60%;
@@ -137,6 +141,14 @@ span#go-back, span#go-forward {
 span#go-back.off, span#go-forward.off, .off { 
     opacity: .5;
     cursor: not-allowed;
+}
+@media (max-width: 1250px) {
+    .type-selector {
+        min-width: 80%;
+    }
+    span {
+        margin: auto 20px;
+    }
 }
 @media (max-width: 900px) {
     .blurb {

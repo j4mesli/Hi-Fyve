@@ -276,8 +276,9 @@ app.get('/synesthesia', async (req, res) => {
             await fetch(url, { headers: headers })
                 .then(res => res.json())
                     .then(async data => {
-                        const random_selection: number = Math.floor(Math.random() * data.items.length);
+                        // const random_selection: number = Math.floor(Math.random() * data.items.length);
                         interface synesthesiaOutput {
+                            top_x_songs: Array<{ name: string, artists: string[], image: string, mp3: string }>;
                             top_name: string;
                             top_artists: string[];
                             top_image: string;
@@ -290,10 +291,11 @@ app.get('/synesthesia', async (req, res) => {
                             color2_name: string;
                         }
                         const output: synesthesiaOutput = {
-                            top_name: data.items[random_selection].name,
+                            top_x_songs: [] as Array<{ name: string, artists: string[], image: string, mp3: string }>,
+                            top_name: data.items[0].name,
                             top_artists: [] as string[],
-                            top_image: data.items[random_selection].album.images[0].url,
-                            top_mp3: data.items[random_selection].preview_url,
+                            top_image: data.items[0].album.images[0].url,
+                            top_mp3: data.items[0].preview_url,
                             color1: [0, 0, 0] as number[],
                             color1_hex: '',
                             color1_name: '',
@@ -301,16 +303,26 @@ app.get('/synesthesia', async (req, res) => {
                             color2_hex: '',
                             color2_name: '',
                         };
-                        data.items[random_selection].artists.forEach((el: { name: string }) => {
+                        data.items[0].artists.forEach((el: { name: string }) => {
                             output.top_artists.push(el.name);
                         });
-                        console.table(output);
+                        for (let item of data.items) {
+                            if (item.preview_url !== null) {
+                                output.top_artists.length = 0;
+                                item.artists.forEach((el: { name: string }) => {
+                                    output.top_artists.push(el.name);
+                                });
+                                output.top_mp3 = item.preview_url;
+                                output.top_name = item.name;
+                                output.top_image = item.album.images[0].url;
+                                break;
+                            }
+                        }
                         // loop through songs and get colors
                         // const masterData = data.items;
                         for (let i = 0; i <= Object.keys(data.items).length; i++) {
                             if (i === Object.keys(data.items).length) {
                                 const color2_array = output.color2.map(x => Math.round(x / (Object.keys(data.items).length * 2) * 255));
-                                // output.color2 = shuffleArray(color2_array) as number[];
                                 output.color2 = color2_array;
                                 output.color2_hex = rgbToHex(output.color2);
                                 output.color2_name = ntc.getColorName(output.color2_hex).name;
@@ -320,6 +332,12 @@ app.get('/synesthesia', async (req, res) => {
                                 firstRes.send(output);
                             }
                             else {
+                                output.top_x_songs.push({ 
+                                    name: data.items[i].name, 
+                                    artists: data.items[i].artists.map((el: { name: string }) => { return el.name }), 
+                                    image: data.items[i].album.images[0].url, 
+                                    mp3: data.items[i].preview_url 
+                                });
                                 await fetch('http://localhost:3000/trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
                                     .then(res => res.json())
                                         .then(data => {

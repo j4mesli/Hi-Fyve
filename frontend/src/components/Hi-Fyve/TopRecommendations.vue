@@ -292,7 +292,7 @@ span a {
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
     border-radius: 10px;
-    width: 275px;
+    width: 300px;
     height: 350px;
     background-position: center; 
     background-repeat: no-repeat;
@@ -365,6 +365,9 @@ span a {
     .pfp.minimized {
         width: 70px;
         height: 70px;
+    }
+    .pfp {
+        width: 90%;
     }
 }
 </style>

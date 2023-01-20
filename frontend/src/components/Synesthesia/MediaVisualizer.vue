@@ -1,4 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
+<!-- eslint-disable @typescript-eslint/no-non-null-assertion -->
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <template>
     <LoadingSpinnerVue v-if="songString === ''" />
     <div class="type-selector" v-if="songString !== ''">
@@ -677,6 +679,7 @@ export default defineComponent({
     width: 40%;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
+    border-radius: 10px;
     max-height: 220px;
     z-index: 11;
     overflow-x: hidden;

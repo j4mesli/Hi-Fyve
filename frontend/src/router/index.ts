@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import MyHiFyve from '../views/MyHiFyve.vue'
 import SynesthesiaMain from '../views/SynesthesiaMain.vue'
+import WorldwydeView from '../views/WorldwydeView.vue'
+import AnalyticsView from '../views/AnalyticsView.vue'
 
 // use main.css
 import '../../public/main.css';
@@ -40,6 +42,21 @@ const routes: Array<RouteRecordRaw> = [
     path: '/Synesthesia',
     name: 'Synesthesia',
     component: SynesthesiaMain,
+  },
+  {
+    path: '/Analytics',
+    name: 'Analytics',
+    component: AnalyticsView,
+  },
+  {
+    path: '/Worldwyde',
+    name: 'Worldwyde',
+    component: WorldwydeView,
+  },
+  // redirect user to /Worldwyde from /Worldwide
+  {
+    path: '/Worldwide',
+    redirect: { name: 'Worldwyde' },
   }
 ]
 

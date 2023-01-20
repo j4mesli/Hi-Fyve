@@ -24,7 +24,7 @@
         </div>
     </div>
     <h1 v-if="error" style="color: red">ERROR: {{ error }}</h1>
-    <LoadingSpinnerVue v-if="hideButton"/>
+    <LoadingSpinnerVue v-if="hideButton && !hideSpinner"/>
     <button v-if="data.length!==0 && !hideButton" class="load-more" @click="loadAllTracks()"><h3>Load 5 More</h3></button>
 </template>
 
@@ -35,6 +35,7 @@ import { getUserInformation } from '../functions/getUserInformation';
 import { addCommasToNumber } from '../functions/addCommasToNumber';
 import { evaluateParameters } from '../functions/evaluateParameters';
 import { attributeToColor } from '../functions/attributeToColor';
+import { handleLogIn } from '../functions/handleLogIn';
 import { handleUserInformation } from '../interfaces/handleUserInformationInterface';
 
 export default defineComponent({
@@ -48,6 +49,7 @@ export default defineComponent({
     },
     setup(props, context) {
         const hideButton = ref(false);
+        const hideSpinner = ref(false);
         const data = ref([]) as Ref<unknown[]>;
         const error = ref(null);
         const track_attrs = ref([]) as Ref<unknown[]>;
@@ -56,6 +58,8 @@ export default defineComponent({
             data.value = [] as unknown[];
             track_attrs.value = [] as unknown[];
             context.emit('allowClicks', false as boolean);
+            hideButton.value = false;
+            hideSpinner.value = false;
             const params: handleUserInformation = {
                 request_type: props.item as string,
                 time_range: newValue as string,
@@ -97,44 +101,50 @@ export default defineComponent({
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    if (items.length === 0) {
-                        context.emit('allowClicks', true as boolean);
-                        // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
-                        // automatically closes on loading of additional cards and doesn't close the card contents with it
-                        if (bottomElement.classList.contains('open')) {
-                            bottomElement.children[1].classList.toggle('minimized');
-                            for (let i = 2; i < bottomElement.children[0].children.length; i++) {
-                                bottomElement.children[0].children[i].classList.toggle('hide-child-element');
-                                bottomElement.children[0].classList.toggle('closed');
+                    try {
+                        if (items.length === 0) {
+                            hideSpinner.value = true;
+                            context.emit('allowClicks', true as boolean);
+                            // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                            // automatically closes on loading of additional cards and doesn't close the card contents with it
+                            if (bottomElement.classList.contains('open')) {
+                                bottomElement.children[1].classList.toggle('minimized');
+                                for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                    bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                    bottomElement.children[0].classList.toggle('closed');
+                                }
+                            }
+                        }
+                        else {
+                            for await (const item of items) {
+                                await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                    .then(res => { return res.json() })
+                                        .then(res => {
+                                            let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
+                                            const attrs: Array<Array<string>> = attributeToColor(attributes);
+                                            track_attrs.value.push(attrs);
+                                            if (track_attrs.value.length === (data.value.length+items.length)) {
+                                                data.value.push(...items.slice(0,items.length));
+                                                context.emit('allowClicks', true as boolean);
+                                                hideButton.value = !hideButton.value;
+                                                // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
+                                                // automatically closes on loading of additional cards and doesn't close the card contents with it
+                                                if (bottomElement.classList.contains('open')) {
+                                                    bottomElement.children[1].classList.toggle('minimized');
+                                                    for (let i = 2; i < bottomElement.children[0].children.length; i++) {
+                                                        bottomElement.children[0].children[i].classList.toggle('hide-child-element');
+                                                        bottomElement.children[0].classList.toggle('closed');
+                                                    }
+                                                }
+                                            }
+                                        })
+                                        .catch(err => error.value = err)
+                                    .catch(err => error.value = err);
                             }
                         }
                     }
-                    else {
-                        for await (const item of items) {
-                            await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
-                                .then(res => { return res.json() })
-                                    .then(res => {
-                                        let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
-                                        const attrs: Array<Array<string>> = attributeToColor(attributes);
-                                        track_attrs.value.push(attrs);
-                                        if (track_attrs.value.length === (data.value.length+items.length)) {
-                                            data.value.push(...items.slice(0,items.length));
-                                            context.emit('allowClicks', true as boolean);
-                                            hideButton.value = !hideButton.value;
-                                            // the following reiteration of the 'close/open' function patches the bug that the .artist-card bottom
-                                            // automatically closes on loading of additional cards and doesn't close the card contents with it
-                                            if (bottomElement.classList.contains('open')) {
-                                                bottomElement.children[1].classList.toggle('minimized');
-                                                for (let i = 2; i < bottomElement.children[0].children.length; i++) {
-                                                    bottomElement.children[0].children[i].classList.toggle('hide-child-element');
-                                                    bottomElement.children[0].classList.toggle('closed');
-                                                }
-                                            }
-                                        }
-                                    })
-                                    .catch(err => error.value = err)
-                                .catch(err => error.value = err);
-                        }
+                    catch(err) {
+                        handleLogIn();
                     }
                 })
                 .catch(err => error.value = err);
@@ -163,31 +173,37 @@ export default defineComponent({
             offset: "0",
         };
         onMounted(async () => {
+            // gets track attributes
             data.value = [] as unknown[];
             track_attrs.value = [] as unknown[];
             context.emit('allowClicks', false as boolean);
             await getUserInformation(params)
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
-                    if (items.length === 0) {
-                        context.emit('allowClicks', true as boolean);
-                    }
-                    else {
-                        for await (const item of items) {
-                            await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
-                                .then(res => { return res.json() })
-                                    .then(res => {
-                                        let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
-                                        const attrs: Array<Array<string>> = attributeToColor(attributes);
-                                        track_attrs.value.push(attrs);
-                                        if (track_attrs.value.length === items.length) {
-                                            data.value = items.slice(0,items.length);
-                                            context.emit('allowClicks', true as boolean);
-                                        }
-                                    })
-                                    .catch(err => error.value = err)
-                                .catch(err => error.value = err);
+                    try {
+                        if (items.length === 0) {
+                            context.emit('allowClicks', true as boolean);
                         }
+                        else {
+                            for await (const item of items) {
+                                await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                    .then(res => { return res.json() })
+                                        .then(res => {
+                                            let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
+                                            const attrs: Array<Array<string>> = attributeToColor(attributes);
+                                            track_attrs.value.push(attrs);
+                                            if (track_attrs.value.length === items.length) {
+                                                data.value = items.slice(0,items.length);
+                                                context.emit('allowClicks', true as boolean);
+                                            }
+                                        })
+                                        .catch(err => error.value = err)
+                                    .catch(err => error.value = err);
+                            }
+                        }
+                    }
+                    catch(err) {
+                        handleLogIn();
                     }
                 })
                 .catch(err => error.value = err);
@@ -218,7 +234,7 @@ export default defineComponent({
             }
         }
 
-        return { closeHere, data, error, addCommas, longName, track_attrs, evaluateBottomWindow, convertMilliseconds, loadAllTracks, hideButton };
+        return { closeHere, data, error, addCommas, longName, track_attrs, evaluateBottomWindow, convertMilliseconds, loadAllTracks, hideButton, hideSpinner };
     },
 })
 </script>
@@ -310,7 +326,7 @@ span a {
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
     border-radius: 10px;
-    width: 275px;
+    width: 300px;
     height: 350px;
     background-position: center; 
     background-repeat: no-repeat;
@@ -383,6 +399,9 @@ span a {
     .pfp.minimized {
         width: 70px;
         height: 70px;
+    }
+    .pfp {
+        width: 90%;
     }
 }
 </style>

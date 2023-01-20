@@ -15,9 +15,13 @@ import { scopes } from "./components/scopes.js";
 import { credentials } from "./types/credentials";
 import { getTopXQuery } from "./types/getTopXQuery";
 import { getMyInfo } from "./types/getMyInfo";
+import { songStatistics } from "./types/songStatistics.js";
+import { Top50PlaylistContainer } from "./types/Top50PlaylistContainer.js";
+import { Top50Playlist } from "./types/Top50Playlist.js";
 import { rgbToHex } from "./functions/RGBtoHex.js";
 import colors from "./json/genre-color.json" assert { type: 'json' };
 import colorToName from "./json/color-name.json" assert { type: 'json' };
+import country_playlists from "./json/country-playlists.json" assert { type: 'json' };
 import { shuffleArray } from "./functions/shuffleArray.js";
 
 // init server
@@ -381,5 +385,133 @@ app.get('/trackAnalysis', async (req, res) => {
     }
     else {
         res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+});
+
+//// country_playlist pairs
+app.get('/country_playlists', async (req, res) => {
+    if (req.query.type) {
+        const type = req.query.type as string;
+        const obj: Array<{country: string, id: string}> = country_playlists[type as keyof typeof country_playlists];
+        res.send(obj);
+    }
+    else {
+        try {
+            res.send(country_playlists);
+        }
+        catch(err) {
+            const error: { error: string, code: number | string } = {
+                "error": err as string, 
+                "code": 404,
+            } 
+            res.send(error);
+        }
+    }
+});
+
+//// get tracks from playlist
+app.get('/tracks_from_playlist', async (req, res) => {
+    if (req.query.id && req.query.access_token) {
+        const firstres = res;
+        const playlist_url = 'https://api.spotify.com/v1/playlists/' + req.query.id as string;
+        const headers = { 
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token as string, 
+        };
+        fetch(playlist_url, { headers: headers })
+        .then(res => res.json())
+            .then(data => firstres.send(data.tracks.items))
+            .catch(err => firstres.send(err))
+        .catch(err => firstres.send(err));
+    }
+    else {
+        res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+});
+
+//// forumate average statistics from user item
+const formulateUserAverageStatistics = async (obj: Top50PlaylistContainer, access_token: string) => {
+    const output: songStatistics = {
+        danceability: 0,
+        energy: 0,
+        loudness: 0,
+        speechiness: 0,
+        acousticness: 0,
+        instrumentalness: 0,
+        liveness: 0,
+        valence: 0,
+        tempo: 0,
+        duration_ms: 0,
+        explicit: 0 as number,
+        popularity: 0 as number,
+    };
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+        const track = obj[i];
+        const url = "http://localhost:3000/trackAnalysis?access_token=" + access_token + "&id=" + track.id;
+        // parse rest of values
+        const track_stats = await (await fetch(url)).json();
+        // add explicit and popularity values
+        output.popularity += (track.popularity / 100);
+        if (track.explicit) {
+            output.explicit++;
+        }
+        try {
+            Object.keys(output).forEach(key => {
+                if (key !== "explicit" && key !== "popularity") output[key as keyof songStatistics] += track_stats[key];
+            });
+        }
+        catch(err) {
+            console.error((err as Error).message, `at item #${i+1} of 50 (index ${i}).`);
+        }
+        finally {
+            if (i === Object.keys(obj).length-1) {
+                Object.keys(output).forEach((el: string) => {
+                    const value = output[el as keyof songStatistics] as number;
+                    const final_value = (el !== 'tempo' && el !== 'duration_ms' && el !== 'loudness') ? +((value / 50)*100).toFixed(2) : +(value / 50).toFixed(2);
+                    output[el as keyof songStatistics] = final_value;
+                });
+            }
+        }
+    }
+    return output;
+}
+
+//// get user analytics
+app.get('/user_analytics', async (req, res) => {
+    const firstres = res;
+    if (req.query.access_token && req.query.time_range && req.query.limit && req.query.offset) {
+        const url = "http://localhost:3000/gettopx?request_type=tracks&access_token=" + req.query.access_token as string + "&time_range=" + req.query.time_range as string + "&limit=50&offset=0";
+        const user_top_songs_json: Top50PlaylistContainer = (await (await fetch(url)).json()).items;
+        const user_item = { top_songs: user_top_songs_json, } as { average_statistics: songStatistics, top_songs: Top50PlaylistContainer };
+        user_item["average_statistics"] = await formulateUserAverageStatistics(user_top_songs_json, req.query.access_token as string);
+        firstres.send(user_item);
+    }
+    else {
+        firstres.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+});
+
+//// get country analytics
+app.get('/country_analytics', async (req, res) => {
+    const firstres = res;
+    if (req.query.id && req.query.access_token) {
+        const url = "http://localhost:3000/tracks_from_playlist?access_token=" + req.query.access_token as string + "&id=" + req.query.id as string;
+        const country_top_songs_json = await (await fetch(url)).json();
+        if (country_top_songs_json) {
+            const country_top_songs = {} as Top50PlaylistContainer;
+            for (let i = 0; i < Object.keys(country_top_songs_json).length; i++) {
+                country_top_songs[i] = country_top_songs_json[i].track;
+            }
+            const country_item = { top_songs: country_top_songs, } as { average_statistics: songStatistics, top_songs: Top50PlaylistContainer };
+            country_item["average_statistics"] = await formulateUserAverageStatistics(country_top_songs, req.query.access_token as string);
+            firstres.send(country_item);
+        }
+        else {
+            firstres.send({ "code": "403" });
+        }
+    }
+    else {
+        firstres.send({ "code": "400" });
     }
 })

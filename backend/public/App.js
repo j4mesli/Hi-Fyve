@@ -23,6 +23,7 @@ import { scopes } from "./components/scopes.js";
 import { rgbToHex } from "./functions/RGBtoHex.js";
 import colors from "./json/genre-color.json" assert { type: 'json' };
 import colorToName from "./json/color-name.json" assert { type: 'json' };
+import country_playlists from "./json/country-playlists.json" assert { type: 'json' };
 // init server
 const app = express();
 app.use(cors());
@@ -357,5 +358,129 @@ app.get('/trackAnalysis', (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     else {
         res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+}));
+//// country_playlist pairs
+app.get('/country_playlists', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.type) {
+        const type = req.query.type;
+        const obj = country_playlists[type];
+        res.send(obj);
+    }
+    else {
+        try {
+            res.send(country_playlists);
+        }
+        catch (err) {
+            const error = {
+                "error": err,
+                "code": 404,
+            };
+            res.send(error);
+        }
+    }
+}));
+//// get tracks from playlist
+app.get('/tracks_from_playlist', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (req.query.id && req.query.access_token) {
+        const firstres = res;
+        const playlist_url = 'https://api.spotify.com/v1/playlists/' + req.query.id;
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer ' + req.query.access_token,
+        };
+        fetch(playlist_url, { headers: headers })
+            .then(res => res.json())
+            .then(data => firstres.send(data.tracks.items))
+            .catch(err => firstres.send(err))
+            .catch(err => firstres.send(err));
+    }
+    else {
+        res.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+}));
+//// forumate average statistics from user item
+const formulateUserAverageStatistics = (obj, access_token) => __awaiter(void 0, void 0, void 0, function* () {
+    const output = {
+        danceability: 0,
+        energy: 0,
+        loudness: 0,
+        speechiness: 0,
+        acousticness: 0,
+        instrumentalness: 0,
+        liveness: 0,
+        valence: 0,
+        tempo: 0,
+        duration_ms: 0,
+        explicit: 0,
+        popularity: 0,
+    };
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+        const track = obj[i];
+        const url = "http://localhost:3000/trackAnalysis?access_token=" + access_token + "&id=" + track.id;
+        // parse rest of values
+        const track_stats = yield (yield fetch(url)).json();
+        // add explicit and popularity values
+        output.popularity += (track.popularity / 100);
+        if (track.explicit) {
+            output.explicit++;
+        }
+        try {
+            Object.keys(output).forEach(key => {
+                if (key !== "explicit" && key !== "popularity")
+                    output[key] += track_stats[key];
+            });
+        }
+        catch (err) {
+            console.error(err.message, `at item #${i + 1} of 50 (index ${i}).`);
+        }
+        finally {
+            if (i === Object.keys(obj).length - 1) {
+                Object.keys(output).forEach((el) => {
+                    const value = output[el];
+                    const final_value = (el !== 'tempo' && el !== 'duration_ms' && el !== 'loudness') ? +((value / 50) * 100).toFixed(2) : +(value / 50).toFixed(2);
+                    output[el] = final_value;
+                });
+            }
+        }
+    }
+    return output;
+});
+//// get user analytics
+app.get('/user_analytics', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const firstres = res;
+    if (req.query.access_token && req.query.time_range && req.query.limit && req.query.offset) {
+        const url = "http://localhost:3000/gettopx?request_type=tracks&access_token=" + req.query.access_token + "&time_range=" + req.query.time_range + "&limit=50&offset=0";
+        const user_top_songs_json = (yield (yield fetch(url)).json()).items;
+        const user_item = { top_songs: user_top_songs_json, };
+        user_item["average_statistics"] = yield formulateUserAverageStatistics(user_top_songs_json, req.query.access_token);
+        firstres.send(user_item);
+    }
+    else {
+        firstres.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+    }
+}));
+//// get country analytics
+app.get('/country_analytics', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const firstres = res;
+    if (req.query.id && req.query.access_token) {
+        const url = "http://localhost:3000/tracks_from_playlist?access_token=" + req.query.access_token + "&id=" + req.query.id;
+        const country_top_songs_json = yield (yield fetch(url)).json();
+        if (country_top_songs_json) {
+            const country_top_songs = {};
+            for (let i = 0; i < Object.keys(country_top_songs_json).length; i++) {
+                country_top_songs[i] = country_top_songs_json[i].track;
+            }
+            const country_item = { top_songs: country_top_songs, };
+            country_item["average_statistics"] = yield formulateUserAverageStatistics(country_top_songs, req.query.access_token);
+            firstres.send(country_item);
+        }
+        else {
+            firstres.send({ "code": "403" });
+        }
+    }
+    else {
+        firstres.send({ "code": "400" });
     }
 }));

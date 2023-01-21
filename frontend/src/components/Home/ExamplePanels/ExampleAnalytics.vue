@@ -1,6 +1,6 @@
 <template>
     <div class="example-recommendations">
-        <h1>example analytics panel goes here</h1>
+        <img src="../../../../public/demoAnalytics.jpeg" />
     </div>
 </template>
 
@@ -15,5 +15,10 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+img {
+    width: 300px;
+    border-radius: 10px;
+    border: 4px solid #8b6944;
+    box-shadow: 0 0 8px #ddd;
+}
 </style>

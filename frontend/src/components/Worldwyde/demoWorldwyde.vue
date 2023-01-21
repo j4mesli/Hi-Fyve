@@ -16,5 +16,7 @@ export default defineComponent({
     img {
         width: 100%;
         max-width: 600px;
+        border-radius: 10px;
+        box-shadow: 0 0 8px #ddd;
     }
 </style>

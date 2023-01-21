@@ -488,7 +488,7 @@ app.get('/user_analytics', async (req, res) => {
         firstres.send(user_item);
     }
     else {
-        firstres.send({ "code": "400", "error": "Invalid Request, check your request parameters!" });
+        firstres.send({ "code": "400" });
     }
 });
 

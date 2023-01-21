@@ -1,6 +1,6 @@
 <template>
     <div class="analytics-wrapper" id="analytics-wrapper">
-        <h1 style="font-size: 40px;">Analytics 📈</h1>
+        <h1 class="analytics-title">Analytics 📈</h1>
         <LoadingSpinnerVue v-if="Object.keys(userStatistics).length === 0" />
         <div class="analytics-content" v-else>
             <div class="worldwyde-comparison-buttons">
@@ -18,31 +18,56 @@
                 </div>
             </div>
             <div class="comparison-component-statistics display-as-column" v-else>
-                <h2 class="comparison-component-title">Compare Your Listening Habits</h2>
-                <div class="type-selector">
-                    <span id="go-back" @click="country_playlist_type !== 'viral' ? handleCustomizationChange(country_playlist_type) : ''" class="material-symbols-outlined go-back" :class="{ off: country_playlist_type === 'viral' }">chevron_left</span>
-                    <h2 class="comparison-component-title">{{ country_playlist_type === 'viral' ? "50 Most Viral" : "50 Most Played" }}</h2>
-                    <span id="go-forward" @click="country_playlist_type !== 'played' ? handleCustomizationChange(country_playlist_type) : ''" class="material-symbols-outlined go-forward" :class="{ off: country_playlist_type === 'played' }">chevron_right</span>
+                <div class="dropdown-container">
+                    <h2 class="comparison-component-title">Compare Your Listening Habits</h2>
+                    <div v-if="!hideDropdown && !loadingComparison" class="dropdown-wrapper" :style="{ 
+                        'max-height': !dropdown ? 'none' : '220px',
+                        'overflow-y': !dropdown ? 'visible' : 'scroll',
+                        'z-index': dropdown ? 10 : 9,
+                    }" :class="{ off: played_countries.length === 0 }">
+                        <span class="material-symbols-outlined show-more" :class="{ flipped: dropdown }" v-if="width > 500">expand_more</span>
+                        <div class="dropdown-choice dropdown-active" @click="played_countries.length === 0 ? '' : handleDropdown()" style="border-radius: 10px;" v-if="!dropdown">
+                            <p class="dropdown-p">{{ country.country }}</p>
+                        </div>
+                        <div :id="nation.country === country.country ? 'current-country' : ''" class="dropdown-choice" :class="{ 'dropdown-active': nation.country === country.country }" v-for="nation in played_countries" :key="nation.id" @click="handleDropdown(nation)" v-if="dropdown">
+                            <p class="dropdown-p">{{ nation.country }}</p>
+                        </div>
+                    </div>
                 </div>
-                <LoadingSpinnerVue v-if="Object.keys(countryStatistics).length === 0" />
-                <div class="display-as-row" v-else>
+                <LoadingSpinnerVue v-if="Object.keys(countryStatistics).length === 0 || loadingComparison" />
+                <div class="comparison-component-statistics" v-else :class="{ 'display-as-column': width < 750 }">
                     <div class="min-max-wrapper">
+                        <h2 class="comparison-component-title">Your Listening Habits</h2>
                         <ul class="attribute-list">
                             <h3><li v-for="index in ArrayOfSongStatistics.length" :key="index">
-                                <span style="color: rgb(100, 250, 250)">Your</span> Average {{ ArrayOfSongStatistics[index-1] === 'duration_ms' ? 'Duration' : (ArrayOfSongStatistics[index-1].slice(0,1).toUpperCase() + ArrayOfSongStatistics[index-1].slice(1)) }}: <span style="color: rgb(255, 150, 255)" class="worldwyde-country-percentage">{{ handlePercentages(ArrayOfSongStatistics[index-1], userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) }}</span>
+                                <span style="color: #76e8fe" class="worldwyde-country-name">Your Average {{ ArrayOfSongStatistics[index-1] === 'duration_ms' ? 'Duration' : (ArrayOfSongStatistics[index-1].slice(0,1).toUpperCase() + ArrayOfSongStatistics[index-1].slice(1)) }}</span>: <span :style="{ 
+                                    color: 
+                                        (userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) > (countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) 
+                                        ? '#56fa9a'
+                                        : (userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) < (countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number)
+                                        ? '#ff9090'
+                                        : '#f7fa56'
+                                    }" class="worldwyde-country-percentage">{{ handlePercentages(ArrayOfSongStatistics[index-1], userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) }}</span>
                             </li></h3>
                         </ul>
                     </div>
                     <div class="min-max-wrapper">
-                        <div :id="country" class="min-max-wrapper country">
-                            <h2 class="comparison-component-title">{{ handleCountryName(country) }}&nbsp;&nbsp;{{ getCountryEmoji(country) }}</h2>
+                        <div :id="country.country" class="min-max-wrapper country">
+                            <h2 class="comparison-component-title">{{ handleCountryName(country.country) }}&nbsp;&nbsp;{{ getCountryEmoji(country.country) }}</h2>
                             <ul class="attribute-list">
                                 <h3><li v-for="index in ArrayOfSongStatistics.length" :key="index">
-                                    <span class="worldwyde-country-percentage">Average {{ ArrayOfSongStatistics[index-1] === 'duration_ms' ? 'Duration' : (ArrayOfSongStatistics[index-1].slice(0,1).toUpperCase() + ArrayOfSongStatistics[index-1].slice(1)) }}</span>: <span class="worldwyde-country-name">{{ handlePercentages(ArrayOfSongStatistics[index-1], countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) }}</span>
+                                    <span class="worldwyde-country-percentage" style="color: #43e0fe">Average {{ ArrayOfSongStatistics[index-1] === 'duration_ms' ? 'Duration' : (ArrayOfSongStatistics[index-1].slice(0,1).toUpperCase() + ArrayOfSongStatistics[index-1].slice(1)) }}</span>: <span :style="{
+                                        color:
+                                            (userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) > (countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) 
+                                            ? '#ff9090'
+                                            : (userStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) < (countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number)
+                                            ? '#56fa9a'
+                                            : '#f7fa56'
+                                    }" class="worldwyde-country-name">{{ handlePercentages(ArrayOfSongStatistics[index-1], countryStatistics[ArrayOfSongStatistics[index-1] as keyof songStatistics] as number) }}</span>
                                 </li></h3>
                             </ul>
                         </div>
-                </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,6 +76,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
+import * as htmlToImage from 'html-to-image';
 import LoadingSpinnerVue from '../LoadingSpinnerVue.vue'
 import { ArrayOfCountriesThatNeedTheBeforeThem } from '../interfaces/ArrayOfCountriesThatNeedTheBeforeThem';
 import { songStatistics } from '../interfaces/songStatistics';
@@ -71,12 +97,63 @@ export default defineComponent({
         const userStatistics = ref({}) as Ref<songStatistics>;
         const userTopSongs = ref({}) as Ref<Top50PlaylistContainer>;
         const showComparisonComponent = ref(false);
-        const country_playlist_type = ref('played') as Ref<'viral' | 'played'>;
-        const country = ref("United States of America");
+        const country = ref({ country: "United States of America", id: "37i9dQZEVXbLRQDuF5jeBp" }) as Ref<countryPlaylist>;
         const countryStatistics = ref({}) as Ref<songStatistics>;
         const countryTopSongs = ref({}) as Ref<Top50PlaylistContainer>;
-        const viral_countries = ref([]) as Ref<Array<countryPlaylist>>;
         const played_countries = ref([]) as Ref<Array<countryPlaylist>>;
+        const dropdown = ref(false);
+        const loadingComparison = ref(false);
+        const hideDropdown = ref(false);
+
+        // handle share color board
+        const shareColorBoard = () => {
+            // need to reset margins to left due to quirk of library reading element from page left to elem width instead of elem left to elem right
+            // ex: elem width 100 and margin 20 10 will have 10px background and 90px elem in final image instead
+            const image = document.getElementById("analytics-wrapper") as HTMLElement;
+            const margins = image.style.margin;
+            image.style.margin = '0';
+            htmlToImage.toPng(image)
+            .then((dataUrl: string) => {
+                const img = new Image();
+                img.src = dataUrl;
+                const tab = window.open('','_blank') as Window;
+                const link = document.createElement('a');
+                link.download = 'mycolorboard.jpeg';
+                link.href = dataUrl;
+                link.style.margin = '20px auto';
+                link.style.width = '100%';
+                link.style.height = '10%';
+                link.innerHTML = `<h1 style="margin-left: auto; margin-right: auto">Click Here To Download Your Color Board</h1>`;
+                tab.document.body.appendChild(img);
+                tab.document.body.appendChild(link);
+                image.style.margin = margins;
+            })
+            .catch((err: string) => console.error('oops, something went wrong!', err));
+        }
+
+        // close dropdown
+        document.addEventListener('click', (e) => {
+            const el = e.target as HTMLElement;
+            if (el.classList.length > 0) {
+                if (!el.classList.contains('dropdown-p') && !el.classList.contains('dropdown-choice') && !el.classList.contains('dropdown-wrapper')) {
+                    dropdown.value = false;
+                }
+            }
+            else {
+                dropdown.value = false;
+            }
+        });
+
+        // handles dropdown
+        const handleDropdown = (nation?: { country: string, id: string }) => {
+            dropdown.value = !dropdown.value;
+            if (!dropdown.value && nation) {
+                country.value = nation;
+                loadingComparison.value = true;
+                hideDropdown.value = true;
+                fetchCountryStatistics();
+            }
+        }
 
         // swap display of statistics
         const swapDisplayOfStatistics = () => {
@@ -94,16 +171,10 @@ export default defineComponent({
             return country_obj.emoji;
         }
 
-        // handles swap type of country playlist comparison
-        const handleCustomizationChange = (type: 'viral' | 'played') => {
-            country_playlist_type.value = (type === 'viral' ? 'played' : 'viral');
-        }
-
         // fetch all countries from backend
         const fetchCountryList = async () => {
             const url = 'http://localhost:3000/country_playlists';
             const country_json = await (await fetch(url)).json();
-            viral_countries.value = country_json.viral;
             played_countries.value = country_json.plays;
         }
 
@@ -143,8 +214,20 @@ export default defineComponent({
 
         // fetch country statistics
         const fetchCountryStatistics = async () => {
-            // fetch country playlist statistics and parse through their stats
-            // set them to correct objects and display them
+            const id = played_countries.value.filter(nation => {
+                return nation.country === country.value.country;
+            });
+            const url = "http://localhost:3000/country_analytics?access_token=" + localStorage.access_token + "&id=" + id[0].id;
+            const country_analysis_json = await (await fetch(url)).json();
+            if (Object.keys(country_analysis_json).length === 1) {
+                handleLogIn();
+            }
+            else {
+                countryStatistics.value = country_analysis_json.average_statistics;
+                countryTopSongs.value = country_analysis_json.top_songs;
+                loadingComparison.value = false;
+                hideDropdown.value = false;
+            }
         }
 
         // fetch all statistics
@@ -161,7 +244,7 @@ export default defineComponent({
         // fetch user stats on mount to DOM
         onMounted(() => fetchStatistics());
 
-        return { width, time_frame, country_playlist_type, userStatistics, userTopSongs, countryStatistics, countryTopSongs, showComparisonComponent, ArrayOfSongStatistics, country, viral_countries, played_countries, swapDisplayOfStatistics, handleCustomizationChange, handleCountryName, getCountryEmoji, handlePercentages };
+        return { shareColorBoard, hideDropdown, loadingComparison, width, time_frame, dropdown, userStatistics, userTopSongs, countryStatistics, countryTopSongs, showComparisonComponent, ArrayOfSongStatistics, country, played_countries, swapDisplayOfStatistics, handleCountryName, getCountryEmoji, handlePercentages, handleDropdown };
     }
 });
 </script>
@@ -228,5 +311,16 @@ span.go-back, span.go-forward {
     width: 80%;
     height: 80%;
     margin: 0 auto;
+}
+.dropdown-container {
+    margin-bottom: 40px;
+}
+.analytics-title {
+    font-size: 40px;
+}
+@media (max-width: 750px) {
+    .analytics-title {
+        font-size: 32px;
+    }
 }
 </style>

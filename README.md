@@ -1,4 +1,4 @@
-# Hi-Fyve Hi-Fyve
+# Hi-Fyve
 
 A web-app built using the MEVN stack allowing for users to view, edit, and generate data about their Spotify usage. 
 - <strong>This project is LIVE and operating on a closed beta.

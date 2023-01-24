@@ -1,6 +1,10 @@
 {
   "scripts": {
-    "start": "nodemon ./public/App.js"
+    "start": "node public/App.js",
+    "postinstall": "tsc",
+    "watch-node": "nodemon public/App.js",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -26,5 +30,6 @@
     "@types/morgan": "^1.9.3",
     "@types/spotify-web-api-node": "^5.0.7"
   },
+  "engines": { "node": "18.13.0" },
   "type": "module"
 }

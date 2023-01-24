@@ -16,20 +16,26 @@ import path from "path";
 import fs from "fs";
 import cors from "cors";
 import invert from "invert-color";
+import { readFileSync } from "fs";
+const __dirname = path.resolve();
 // import * as ntc from 'ntc-ts'; // primary import
 import * as ntc from './functions/ntc-ts/index.js'; // alternate import
 // types/interfaces/components
 import { scopes } from "./components/scopes.js";
 import { rgbToHex } from "./functions/RGBtoHex.js";
-import colors from "./json/genre-color.json" assert { type: 'json' };
-import colorToName from "./json/color-name.json" assert { type: 'json' };
-import country_playlists from "./json/country-playlists.json" assert { type: 'json' };
+const colors = JSON.parse(readFileSync(path.join(__dirname, "/src/json/genre-color.json")).toString());
+const colorToName = JSON.parse(readFileSync(path.join(__dirname, "/src/json/color-name.json")).toString());
+const country_playlists = JSON.parse(readFileSync(path.join(__dirname, "/src/json/country-playlists.json")).toString());
+const genre_colors = JSON.parse(readFileSync(path.join(__dirname, "/src/json/genre-color.json")).toString());
 // init server
 const app = express();
-app.use(cors());
-app.listen(3000, 'localhost', () => {
-    console.log("It's alive on http://localhost:3000");
-});
+const corsOptions = {
+  origin: '*',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+}
+app.use(cors(corsOptions));
+const port = process.env.PORT || 3000;
+app.listen(process.env.PORT || 5000);
 // middleware
 app.use(morgan('dev'));
 ntc.initColors(ntc.ORIGINAL_COLORS);
@@ -46,6 +52,8 @@ const spotifyApi = new spotifyWebApi(creds);
 // routes
 //// gets authorization URL for frontend to open
 app.get('/getURL', (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     let obj = {};
     obj = Object.assign({ 'url': spotifyApi.createAuthorizeURL(scopes, state) }, obj);
     res.send(obj);
@@ -82,7 +90,7 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({ 'expires_in': expires_in }, obj);
             obj = Object.assign({ 'data': data }, obj);
             const query = '?access_token=' + access_token + '&refresh_token=' + refresh_token;
-            res.redirect('http://localhost:8080/' + query);
+            res.redirect('https://hi-fyve.herokuapp.com/' + query);
         })
             .catch(error => {
             obj = Object.assign({ 'Error getting Tokens': error }, obj);
@@ -213,9 +221,7 @@ app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     else {
         try {
-            const location = path.join(__dirname, '..', 'json', 'genre-color.json');
-            res.header("Content-Type", 'application/json');
-            res.sendFile(location);
+            res.send(genre_colors);
         }
         catch (err) {
             const error = {
@@ -234,9 +240,7 @@ app.get('/nameForColor', (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     else {
         try {
-            const location = path.join(__dirname, '..', 'json', 'color-name.json');
-            res.header("Content-Type", 'application/json');
-            res.sendFile(location);
+            res.send(genre_colors);
         }
         catch (err) {
             const error = {
@@ -316,7 +320,7 @@ app.get('/synesthesia', (req, res) => __awaiter(void 0, void 0, void 0, function
                             image: data.items[i].album.images[0].url,
                             mp3: data.items[i].preview_url
                         });
-                        yield fetch('http://localhost:3000/trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
+                        yield fetch('https://spotifyve-backend.herokuapp.com//trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
                             .then(res => res.json())
                             .then(data => {
                             // update color1 r,g,b
@@ -418,7 +422,7 @@ const formulateUserAverageStatistics = (obj, access_token) => __awaiter(void 0, 
     };
     for (let i = 0; i < Object.keys(obj).length; i++) {
         const track = obj[i];
-        const url = "http://localhost:3000/trackAnalysis?access_token=" + access_token + "&id=" + track.id;
+        const url = "https://spotifyve-backend.herokuapp.com//trackAnalysis?access_token=" + access_token + "&id=" + track.id;
         // parse rest of values
         const track_stats = yield (yield fetch(url)).json();
         // add explicit and popularity values
@@ -451,7 +455,7 @@ const formulateUserAverageStatistics = (obj, access_token) => __awaiter(void 0, 
 app.get('/user_analytics', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const firstres = res;
     if (req.query.access_token && req.query.time_range && req.query.limit && req.query.offset) {
-        const url = "http://localhost:3000/gettopx?request_type=tracks&access_token=" + req.query.access_token + "&time_range=" + req.query.time_range + "&limit=50&offset=0";
+        const url = "https://spotifyve-backend.herokuapp.com//gettopx?request_type=tracks&access_token=" + req.query.access_token + "&time_range=" + req.query.time_range + "&limit=50&offset=0";
         const user_top_songs_json = (yield (yield fetch(url)).json()).items;
         const user_item = { top_songs: user_top_songs_json, };
         user_item["average_statistics"] = yield formulateUserAverageStatistics(user_top_songs_json, req.query.access_token);
@@ -465,7 +469,7 @@ app.get('/user_analytics', (req, res) => __awaiter(void 0, void 0, void 0, funct
 app.get('/country_analytics', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const firstres = res;
     if (req.query.id && req.query.access_token) {
-        const url = "http://localhost:3000/tracks_from_playlist?access_token=" + req.query.access_token + "&id=" + req.query.id;
+        const url = "https://spotifyve-backend.herokuapp.com//tracks_from_playlist?access_token=" + req.query.access_token + "&id=" + req.query.id;
         const country_top_songs_json = yield (yield fetch(url)).json();
         if (country_top_songs_json) {
             const country_top_songs = {};

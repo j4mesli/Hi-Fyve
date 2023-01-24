@@ -6,7 +6,7 @@ export const getUserInformation = async (params: handleUserInformation) => {
     await refreshAccessToken(localStorage.refresh_token);
 
     // url for fetch request
-    const url = 'http://localhost:3000/gettopx?access_token='
+    const url = 'https://spotifyve-backend.herokuapp.com/gettopx?access_token='
     + localStorage.access_token + '&request_type='
     + params.request_type + '&time_range='
     + params.time_range + '&limit='

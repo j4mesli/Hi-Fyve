@@ -2,7 +2,10 @@
     <div class="top-artists-wrapper">
         <div class="artist-card top open" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[0]">
             <div class="body-paragraph">
-                <h2 class="title">#1. {{ (top5 as any[])[0].name }} <a target="_blank" :href="(top5 as any[])[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#1. {{ (top5 as any[])[0].name }} <a target="_blank" :href="(top5 as any[])[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[0] }}</span></h4>
                 <h4>Genre(s): 
                     <span v-if="(top5 as any[])[0].genres.length >= 1">{{ (top5 as any[])[0].genres[0] }}</span>
@@ -15,7 +18,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[1]">
             <div class="body-paragraph closed">
-                <h2 class="title">#2. {{ (top5 as any[])[1].name }} <a target="_blank" :href="(top5 as any[])[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#2. {{ (top5 as any[])[1].name }} <a target="_blank" :href="(top5 as any[])[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[1] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[1].genres.length >= 1">{{ (top5 as any[])[1].genres[0] }}</span>
@@ -28,7 +34,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[2]">
             <div class="body-paragraph closed">
-                <h2 class="title">#3. {{ (top5 as any[])[2].name }} <a target="_blank" :href="(top5 as any[])[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#3. {{ (top5 as any[])[2].name }} <a target="_blank" :href="(top5 as any[])[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[2] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[2].genres.length >= 1">{{ (top5 as any[])[2].genres[0] }}</span>
@@ -40,7 +49,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[3]">
             <div class="body-paragraph closed">
-                <h2 class="title">#4. {{ (top5 as any[])[3].name }} <a target="_blank" :href="(top5 as any[])[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#4. {{ (top5 as any[])[3].name }} <a target="_blank" :href="(top5 as any[])[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[3] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[3].genres.length >= 1">{{ (top5 as any[])[3].genres[0] }}</span>
@@ -53,7 +65,10 @@
         </div>
         <div class="artist-card bottom" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[4]">
             <div class="body-paragraph closed">
-                <h2 class="title">#5. {{ (top5 as any[])[4].name }} <a target="_blank" :href="(top5 as any[])[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#5. {{ (top5 as any[])[4].name }} <a target="_blank" :href="(top5 as any[])[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[4] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[4].genres.length >= 1">{{ (top5 as any[])[4].genres[0] }}</span>

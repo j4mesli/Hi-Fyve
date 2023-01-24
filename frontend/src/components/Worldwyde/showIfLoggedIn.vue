@@ -52,7 +52,10 @@
                     <div class="worldwyde-top-songs" v-for="index in 3" :key="index" :class="{ 'worldwyde-top-songs-top': index === 1, 'worldwyde-top-songs-bottom': index === 3 }">
                         <h4 v-if="Object.keys(viral_playlist).length === 0">Loading...</h4>
                         <div class="playlist-song" v-else>
-                            <div class="worldwyde-top-songs-image" :style="{ 'background-image': `url(${viral_playlist[index-1].album.images[0].url})`, 'opacity': '0.9' }"></div>
+                            <div class="display-as-row" style="width: 25%;">
+                                <img class="small-logo" src="../../../public/spotify_logo.png" />
+                                <div class="worldwyde-top-songs-image" :style="{ 'background-image': `url(${viral_playlist[index-1].album.images[0].url})`, 'opacity': '0.9' }"></div>
+                            </div>
                             <div class="worldwyde-top-songs-text">
                                 <h4>{{ viral_playlist[index-1].name }}<a target="_blank" :href="viral_playlist[index-1].external_urls.spotify" style="font-weight: bold;"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h4>
                                 <p><span v-for="(artist, i) in viral_playlist[index-1].artists" :key="artist.id">
@@ -117,7 +120,10 @@
                     <div class="worldwyde-top-songs" v-for="index in 3" :key="index" :class="{ 'worldwyde-top-songs-top': index === 1, 'worldwyde-top-songs-bottom': index === 3 }">
                         <h4 v-if="Object.keys(played_playlist).length === 0">Loading...</h4>
                         <div class="playlist-song" v-else>
-                            <div class="worldwyde-top-songs-image" :style="{ 'background-image': `url(${played_playlist[index-1].album.images[0].url})`, 'opacity': '0.9' }"></div>
+                            <div class="display-as-row" style="width: 25%;">
+                                <img class="small-logo" src="../../../public/spotify_logo.png" />
+                                <div class="worldwyde-top-songs-image" :style="{ 'background-image': `url(${played_playlist[index-1].album.images[0].url})`, 'opacity': '0.9' }"></div>
+                            </div>
                             <div class="worldwyde-top-songs-text">
                                 <h4>
                                     {{ played_playlist[index-1].name }}
@@ -239,7 +245,7 @@ export default defineComponent({
         }
 
         // fetch all countries from backend
-        fetch('http://localhost:3000/country_playlists')
+        fetch('https://spotifyve-backend.herokuapp.com/country_playlists')
             .then(res => res.json())
                 .then(data => {
                     master_countries.value = data;
@@ -258,7 +264,7 @@ export default defineComponent({
             const countries = type === 'viral' ? viral_countries.value : played_countries.value;
             const country_obj: countryPlaylist = type === 'viral' ? individual_country.value : global_selected_country.value;
             const country = countries.find(el => el === country_obj) as countryPlaylist;
-            const playlist_obj = await fetch('http://localhost:3000/tracks_from_playlist?id=' + country.id + '&access_token=' + localStorage.access_token);
+            const playlist_obj = await fetch('https://spotifyve-backend.herokuapp.com/tracks_from_playlist?id=' + country.id + '&access_token=' + localStorage.access_token);
             const playlist_json = await playlist_obj.json();
             if (Object.keys(playlist_json).length < 2) handleLogIn();
             const playlist = {} as typeof playlist_json;
@@ -392,6 +398,10 @@ export default defineComponent({
 </script>
 
 <style>
+.small-logo {
+    max-height: 20px;
+    max-width: 20px;
+}
 .worldwyde-swap-comparison-type {
     cursor: pointer;
     color: #00c3ff;
@@ -410,7 +420,6 @@ export default defineComponent({
     background-position: center; 
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    border-radius: 10px;
     margin: auto 0 auto auto;
 }
 .worldwyde-top-songs-text {

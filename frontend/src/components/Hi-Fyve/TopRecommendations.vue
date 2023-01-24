@@ -67,7 +67,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                        await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -99,7 +99,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                    await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                    await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                         .then(res => { return res.json() })
                             .then(res => {
                                 let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -157,7 +157,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                        await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -282,6 +282,7 @@ span a {
 }
 .artist-card h2 {
     font-size: 20px;
+    margin-left: 20px;
 }
 .pfp.minimized {
     width: 100px;
@@ -291,7 +292,6 @@ span a {
     margin: 0;
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
-    border-radius: 10px;
     width: 300px;
     height: 350px;
     background-position: center; 

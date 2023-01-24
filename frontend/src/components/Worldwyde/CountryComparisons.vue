@@ -182,7 +182,7 @@ export default defineComponent({
                 };
                 // loops through playlist and gets attributes of each song
                 for (let i = 0; i < Object.keys(playlist).length; i++) {
-                    const trackFeaturesURL = 'http://localhost:3000/getTrackFeatures?id=' + playlist[i].id + '&access_token=' + localStorage.access_token;
+                    const trackFeaturesURL = 'https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + playlist[i].id + '&access_token=' + localStorage.access_token;
                     const audio_features_json = await fetch(trackFeaturesURL);
                     const audio_features = await audio_features_json.json();
                     try {
@@ -211,7 +211,7 @@ export default defineComponent({
         // Promise All of fetch songs and playlists from countries array
         const fetchSongsAndPlaylists = async () => {
             const songs_and_playlists = await Promise.all(countries.value.map(async country => {
-                const playlist_json = await (await fetch('http://localhost:3000/tracks_from_playlist?id=' + country.id + '&access_token=' + localStorage.access_token)).json();
+                const playlist_json = await (await fetch('https://spotifyve-backend.herokuapp.com/tracks_from_playlist?id=' + country.id + '&access_token=' + localStorage.access_token)).json();
                 const playlist = {} as typeof playlist_json;
                 const explicit_popularity = [0,0];
                 for (let i = 0; i < Object.keys(playlist_json).length; i++) {

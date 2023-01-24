@@ -3,7 +3,10 @@
     <div v-else class="top-artists-wrapper">
         <div class="artist-card top open" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[0]">
             <div class="body-paragraph">
-                <h2 class="title">#1. {{ (top5 as any[])[0].name }} <a target="_blank" :href="(top5 as any[])[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#1. {{ (top5 as any[])[0].name }} <a target="_blank" :href="(top5 as any[])[0].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[0] }}</span></h4>
                 <h4>Genre(s): 
                     <span v-if="(top5 as any[])[0].genres.length >= 1">{{ (top5 as any[])[0].genres[0] }}</span>
@@ -16,7 +19,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[1]">
             <div class="body-paragraph closed">
-                <h2 class="title">#2. {{ (top5 as any[])[1].name }} <a target="_blank" :href="(top5 as any[])[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#2. {{ (top5 as any[])[1].name }} <a target="_blank" :href="(top5 as any[])[1].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[1] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[1].genres.length >= 1">{{ (top5 as any[])[1].genres[0] }}</span>
@@ -29,7 +35,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[2]">
             <div class="body-paragraph closed">
-                <h2 class="title">#3. {{ (top5 as any[])[2].name }} <a target="_blank" :href="(top5 as any[])[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#3. {{ (top5 as any[])[2].name }} <a target="_blank" :href="(top5 as any[])[2].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[2] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[2].genres.length >= 1">{{ (top5 as any[])[2].genres[0] }}</span>
@@ -41,7 +50,10 @@
         </div>
         <div class="artist-card" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[3]">
             <div class="body-paragraph closed">
-                <h2 class="title">#4. {{ (top5 as any[])[3].name }} <a target="_blank" :href="(top5 as any[])[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#4. {{ (top5 as any[])[3].name }} <a target="_blank" :href="(top5 as any[])[3].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[3] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[3].genres.length >= 1">{{ (top5 as any[])[3].genres[0] }}</span>
@@ -54,7 +66,10 @@
         </div>
         <div class="artist-card" :class="{ 'bottom': data.length === 0 }" @click="e => closeHere(e)" v-if="(top5 as Array<Object>)[4]">
             <div class="body-paragraph closed">
-                <h2 class="title">#5. {{ (top5 as any[])[4].name }} <a target="_blank" :href="(top5 as any[])[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#5. {{ (top5 as any[])[4].name }} <a target="_blank" :href="(top5 as any[])[4].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[4] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="(top5 as any[])[4].genres.length >= 1">{{ (top5 as any[])[4].genres[0] }}</span>
@@ -67,7 +82,10 @@
         </div>
         <div class="artist-card" :class="{ 'bottom': evaluateBottomWindow(index) }" @click="e => closeHere(e)" v-if="data.length !== 0" v-for="(artist, index) in (data as Array<any>)" :key="artist">
             <div class="body-paragraph closed">
-                <h2 class="title">#{{index + 6}}. {{ artist.name }} <a target="_blank" :href="(data as Array<any>)[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#{{index + 6}}. {{ artist.name }} <a target="_blank" :href="(data as Array<any>)[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Most Popular Track: <span>{{ topTracks[6+index] }}</span></h4>
                 <h4 class="hide-child-element">Genre(s): 
                     <span v-if="artist.genres.length >= 1">{{ artist.genres[0] }}</span>
@@ -132,7 +150,7 @@ export default defineComponent({
                         }
                         else {
                             for await (const item of items) {
-                                await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                await fetch('https://spotifyve-backend.herokuapp.com/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                                 .then(res => { return res.json() })
                                     .then(res => {
                                         const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
@@ -186,7 +204,7 @@ export default defineComponent({
                         }
                         else {
                             for await (const item of items) {
-                                await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                await fetch('https://spotifyve-backend.herokuapp.com/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                                 .then(res => { return res.json() })
                                     .then(res => {
                                         console.log(res)
@@ -251,7 +269,7 @@ export default defineComponent({
                         }
                         else {
                             for await (const item of items) {
-                                await fetch('http://localhost:3000/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                await fetch('https://spotifyve-backend.herokuapp.com/getTopTracks?id=' + item.id + '&access_token=' + localStorage.access_token)
                                 .then(res => { return res.json() })
                                     .then(res => {
                                         const name = res.tracks[0].name.length > 40 ? res.tracks[0].name.slice(0,38) + '...' as string : res.tracks[0].name as string;
@@ -363,6 +381,7 @@ export default defineComponent({
 }
 .artist-card h2 {
     font-size: 20px;
+    margin-left: 20px;
 }
 .pfp.minimized {
     width: 100px;
@@ -372,7 +391,6 @@ export default defineComponent({
     margin: 0;
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
-    border-radius: 10px;
     width: 300px;
     height: 350px;
     background-position: center; 

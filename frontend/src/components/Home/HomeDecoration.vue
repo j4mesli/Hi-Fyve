@@ -23,9 +23,6 @@
             </div>
         </div>
         <LoadingSpinnerVue v-else/>
-        <div class="synced">
-            <img src="../../../public/powered_by_spotify.png">
-        </div>
         <HomeInfoSectionVue />
     </div>
 </template>
@@ -69,7 +66,7 @@ export default defineComponent({
         // login function
         const login = async () => {
             spinner.value = true;
-            await fetch('http://localhost:3000/getURL')
+            await fetch('https://spotifyve-backend.herokuapp.com/getURL')
             .then(res => {
                 return res.json();
             })
@@ -82,7 +79,7 @@ export default defineComponent({
 
         // get user info function
         const getUserInfo = async () => {
-            await fetch('http://localhost:3000/me?access_token=' + localStorage.access_token)
+            await fetch('https://spotifyve-backend.herokuapp.com/me?access_token=' + localStorage.access_token)
                 .then(res => { return res.json(); })
                     .then(data => {
                         user.value = data;
@@ -103,7 +100,7 @@ export default defineComponent({
         // get genre: color pairs
         const getColors = async () => {
             // get all color pairs
-            await fetch('http://localhost:3000/colors')
+            await fetch('https://spotifyve-backend.herokuapp.com/colors')
                 .then(res => { return res.json() })
                     .then(data => {
                         colors.value = data;

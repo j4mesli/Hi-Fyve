@@ -5,7 +5,7 @@
     <div class="login-button">
         <button v-if="(!spinner)" @click="login">
             <div class="logo">
-                <img src="../../../public/spotify_logo.png">
+                <img class="small-logo" src="../../../public/spotify_logo.png">
             </div>
             <p class="button">Continue With Spotify</p>
         </button>
@@ -44,7 +44,7 @@ export default defineComponent({
         // login function
         const login = async () => {
             spinner.value = true;
-            await fetch('http://localhost:3000/getURL')
+            await fetch('https://spotifyve-backend.herokuapp.com/getURL')
             .then(res => {
                 return res.json();
             })

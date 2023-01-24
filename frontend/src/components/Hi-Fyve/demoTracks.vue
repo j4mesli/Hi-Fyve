@@ -2,7 +2,10 @@
     <div class="top-artists-wrapper">
         <div class="artist-card" :class="{ 'open': index === 0, 'bottom': evaluateBottomWindow(index), 'top': index === 0 }" @click="e => closeHere(e)" v-for="(track, index) in (data as any[])" :key="track">
             <div class="body-paragraph" :class="{ 'closed': index > 0 }">
-                <h2 class="title">#{{index + 1}}. {{ longName(track.name) }} <a target="_blank" :href="(data as any[])[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#{{index + 1}}. {{ longName(track.name) }} <a target="_blank" :href="(data as any[])[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Artist(s): 
                     <span v-for="(artist, index) in track.artists" :key="artist" style="flex-direction: row">
                         <a target="_blank" :href="artist.external_urls.spotify">

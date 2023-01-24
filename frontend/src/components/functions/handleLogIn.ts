@@ -1,5 +1,5 @@
 export const handleLogIn = async () => {
-    await fetch('http://localhost:3000/getURL')
+    await fetch('https://spotifyve-backend.herokuapp.com/getURL')
     .then(res => {
         return res.json();
     })

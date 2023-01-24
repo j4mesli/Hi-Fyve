@@ -2,7 +2,7 @@
     <div class="info head">
         <h1>Think "Wrapped++"</h1>
         <div class="body-paragraph">
-            <h4>Born to show off your data, SpotiFyve brings music insights, powered by you!</h4>
+            <h4>Born to show off your data, Hi-Fyve brings music insights, powered by you!</h4>
             <h4>Our system lets you view your listening data in a beautified pattern at any time year-round.</h4>
             <h4>You can call it "Wrapped with Classes" - we provide "hygher" levels of analysis!</h4>
         </div>
@@ -10,7 +10,7 @@
             <div class="info">
                 <h1>Music Insights, Powered by You!</h1>
                 <div class="body-paragraph">
-                    <h4>With SpotiFyve's Hi-Fyve, you can see how "fyre 🔥" your favorite artists, albums, and tracks really are!</h4>
+                    <h4>With Hi-Fyve's Hi-Fyve, you can see how "fyre 🔥" your favorite artists, albums, and tracks really are!</h4>
                     <h4>See your most played content on Spotify from the past month, 6 months, or the full extent of your listening history.</h4>
                     <h4>Our analysis tools provide deep insights into your music, so you can discover new favorites and elevate your listening experience.</h4>
                 </div>

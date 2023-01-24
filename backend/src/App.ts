@@ -7,6 +7,8 @@ import path from "path";
 import fs from "fs";
 import cors from "cors";
 import invert, { Color } from "invert-color";
+import { readFileSync } from "fs";
+const __dirname = path.resolve();
 // import * as ntc from 'ntc-ts'; // primary import
 import * as ntc from './functions/ntc-ts/index.js'; // alternate import
 
@@ -19,17 +21,16 @@ import { songStatistics } from "./types/songStatistics.js";
 import { Top50PlaylistContainer } from "./types/Top50PlaylistContainer.js";
 import { Top50Playlist } from "./types/Top50Playlist.js";
 import { rgbToHex } from "./functions/RGBtoHex.js";
-import colors from "./json/genre-color.json" assert { type: 'json' };
-import colorToName from "./json/color-name.json" assert { type: 'json' };
-import country_playlists from "./json/country-playlists.json" assert { type: 'json' };
+const colors = JSON.parse(readFileSync(path.join(__dirname, "/src/json/genre-color.json")).toString());
+const colorToName = JSON.parse(readFileSync(path.join(__dirname, "/src/json/color-name.json")).toString());
+const country_playlists = JSON.parse(readFileSync(path.join(__dirname, "/src/json/country-playlists.json")).toString());
 import { shuffleArray } from "./functions/shuffleArray.js";
 
 // init server
 const app = express();
 app.use(cors());
-app.listen(3000, 'localhost', () => {
-    console.log("It's alive on http://localhost:3000");
-});
+const port = process.env.PORT || 3000;
+app.listen(process.env.PORT || 5000);
 
 // middleware
 app.use(morgan('dev'));
@@ -87,7 +88,7 @@ app.get('/callback', (req, res) => {
             obj = Object.assign({'data': data}, obj);
 
             const query: string = '?access_token=' + access_token + '&refresh_token=' + refresh_token;
-            res.redirect('http://localhost:8080/' + query);
+            res.redirect('https://hi-fyve.herokuapp.com/' + query);
         })
         .catch(error => {
             obj = Object.assign({'Error getting Tokens': error}, obj);
@@ -342,7 +343,7 @@ app.get('/synesthesia', async (req, res) => {
                                     image: data.items[i].album.images[0].url, 
                                     mp3: data.items[i].preview_url 
                                 });
-                                await fetch('http://localhost:3000/trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
+                                await fetch('https://spotifyve-backend.herokuapp.com//trackAnalysis?access_token=' + params.access_token + '&id=' + data.items[i.toString()].id)
                                     .then(res => res.json())
                                         .then(data => {
                                             // update color1 r,g,b
@@ -448,7 +449,7 @@ const formulateUserAverageStatistics = async (obj: Top50PlaylistContainer, acces
     };
     for (let i = 0; i < Object.keys(obj).length; i++) {
         const track = obj[i];
-        const url = "http://localhost:3000/trackAnalysis?access_token=" + access_token + "&id=" + track.id;
+        const url = "https://spotifyve-backend.herokuapp.com//trackAnalysis?access_token=" + access_token + "&id=" + track.id;
         // parse rest of values
         const track_stats = await (await fetch(url)).json();
         // add explicit and popularity values
@@ -481,7 +482,7 @@ const formulateUserAverageStatistics = async (obj: Top50PlaylistContainer, acces
 app.get('/user_analytics', async (req, res) => {
     const firstres = res;
     if (req.query.access_token && req.query.time_range && req.query.limit && req.query.offset) {
-        const url = "http://localhost:3000/gettopx?request_type=tracks&access_token=" + req.query.access_token as string + "&time_range=" + req.query.time_range as string + "&limit=50&offset=0";
+        const url = "https://spotifyve-backend.herokuapp.com//gettopx?request_type=tracks&access_token=" + req.query.access_token as string + "&time_range=" + req.query.time_range as string + "&limit=50&offset=0";
         const user_top_songs_json: Top50PlaylistContainer = (await (await fetch(url)).json()).items;
         const user_item = { top_songs: user_top_songs_json, } as { average_statistics: songStatistics, top_songs: Top50PlaylistContainer };
         user_item["average_statistics"] = await formulateUserAverageStatistics(user_top_songs_json, req.query.access_token as string);
@@ -496,7 +497,7 @@ app.get('/user_analytics', async (req, res) => {
 app.get('/country_analytics', async (req, res) => {
     const firstres = res;
     if (req.query.id && req.query.access_token) {
-        const url = "http://localhost:3000/tracks_from_playlist?access_token=" + req.query.access_token as string + "&id=" + req.query.id as string;
+        const url = "https://spotifyve-backend.herokuapp.com//tracks_from_playlist?access_token=" + req.query.access_token as string + "&id=" + req.query.id as string;
         const country_top_songs_json = await (await fetch(url)).json();
         if (country_top_songs_json) {
             const country_top_songs = {} as Top50PlaylistContainer;

@@ -1,6 +1,9 @@
 <template>
     <div class="example-artist">
-        <h2 class="title">#1. Miguel</h2>
+        <div class="display-as-row">
+            <img class="small-logo" src="../../../../public/spotify_logo.png" />
+            <h2 class="title">#1. Miguel</h2>
+        </div>
         <h4>Most Popular Track: <span>Sure Thing</span></h4>
         <div class="pfp"></div>
     </div>

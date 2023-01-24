@@ -173,7 +173,7 @@ export default defineComponent({
 
         // fetch all countries from backend
         const fetchCountryList = async () => {
-            const url = 'http://localhost:3000/country_playlists';
+            const url = 'https://spotifyve-backend.herokuapp.com/country_playlists';
             const country_json = await (await fetch(url)).json();
             played_countries.value = country_json.plays;
         }
@@ -201,7 +201,7 @@ export default defineComponent({
         // fetch user statistics
         const fetchUserStatistics = async () => {
             await fetchCountryList();
-            const url = "http://localhost:3000/user_analytics?limit=50&offset=0&access_token=" + localStorage.access_token + "&time_range=" + time_frame.value;
+            const url = "https://spotifyve-backend.herokuapp.com/user_analytics?limit=50&offset=0&access_token=" + localStorage.access_token + "&time_range=" + time_frame.value;
             const user_analysis_json = await (await fetch(url)).json();
             if (Object.keys(user_analysis_json).length === 1) {
                 handleLogIn();
@@ -217,7 +217,7 @@ export default defineComponent({
             const id = played_countries.value.filter(nation => {
                 return nation.country === country.value.country;
             });
-            const url = "http://localhost:3000/country_analytics?access_token=" + localStorage.access_token + "&id=" + id[0].id;
+            const url = "https://spotifyve-backend.herokuapp.com/country_analytics?access_token=" + localStorage.access_token + "&id=" + id[0].id;
             const country_analysis_json = await (await fetch(url)).json();
             if (Object.keys(country_analysis_json).length === 1) {
                 handleLogIn();

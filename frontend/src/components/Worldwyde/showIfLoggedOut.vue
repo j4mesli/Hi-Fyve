@@ -4,16 +4,16 @@
         <div class="login-button">
             <button v-if="(!spinner)" @click="login">
                 <div class="logo">
-                    <img src="../../../public/spotify_logo.png">
+                    <img class="small-logo" src="../../../public/spotify_logo.png">
                 </div>
                 <p class="button">Continue With Spotify</p>
             </button>
             <LoadingSpinnerVue v-else />
         </div>
         <p class="description">
-            See what's on fyre worldwyde! <span style="color: rgb(29,185,84)">SpotiFyve</span>'s analytics service also allows users to see what's popular Worldwyde!
+            See what's on fyre worldwyde! <span style="color: rgb(29,185,84)">Hi-Fyve</span>'s analytics service also allows users to see what's popular Worldwyde!
             Users can sync their accounts with our service and view the different songs that are trending globally and in whichever country they choose! On top of that, a user can
-            compare two countries and their most popular tracks to see analytics on similarities and differences between the two nations! Come see what's burning🔥 up the charts worldwyde with SpotiFyve!
+            compare two countries and their most popular tracks to see analytics on similarities and differences between the two nations! Come see what's burning🔥 up the charts worldwyde with Hi-Fyve!
         </p>
         <demoWorldwydeVue v-if="showDemo" />
         <h3 @click="showDemo = !showDemo" class="show-hide-demo" v-if="!showDemo">Click Here to See What Worldw<span style="color: rgb(29,185,84)">y</span>de🌎 Can Show You!!</h3>
@@ -36,7 +36,7 @@ export default defineComponent({
         // login function
         const login = async () => {
             spinner.value = true;
-            await fetch('http://localhost:3000/getURL')
+            await fetch('https://spotifyve-backend.herokuapp.com/getURL')
             .then(res => {
                 return res.json();
             })

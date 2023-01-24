@@ -3,7 +3,10 @@
     <div v-else-if="data.length !== 0" class="top-artists-wrapper">
         <div class="artist-card" :class="{ 'open': index === 0, 'bottom': evaluateBottomWindow(index), 'top': index === 0 }" @click="e => closeHere(e)" v-for="(track, index) in (data as any[])" :key="track">
             <div class="body-paragraph" :class="{ 'closed': index > 0 }">
-                <h2 class="title">#{{index + 1}}. {{ longName(track.name) }} <a target="_blank" :href="(data as any[])[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                <div class="display-as-row">
+                    <img class="small-logo" src="../../../public/spotify_logo.png" />
+                    <h2 class="title">#{{index + 1}}. {{ longName(track.name) }} <a target="_blank" :href="(data as any[])[index].external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                </div>
                 <h4>Artist(s): 
                     <span v-for="(artist, index) in track.artists" :key="artist" style="flex-direction: row">
                         <a target="_blank" :href="artist.external_urls.spotify">
@@ -70,7 +73,7 @@ export default defineComponent({
                 .then(async res => {
                     const items: Array<typeof res.items> = res.items;
                     for await (const item of items) {
-                        await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                        await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                             .then(res => { return res.json() })
                                 .then(res => {
                                     let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -117,7 +120,7 @@ export default defineComponent({
                         }
                         else {
                             for await (const item of items) {
-                                await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                                     .then(res => { return res.json() })
                                         .then(res => {
                                             let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -186,7 +189,7 @@ export default defineComponent({
                         }
                         else {
                             for await (const item of items) {
-                                await fetch('http://localhost:3000/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
+                                await fetch('https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + item.id + '&access_token=' + localStorage.access_token)
                                     .then(res => { return res.json() })
                                         .then(res => {
                                             let attributes: { [key: string]: Array<string | number> } = evaluateParameters(res);
@@ -240,6 +243,13 @@ export default defineComponent({
 </script>
 
 <style>
+.display-as-row {
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 span.track-attributes {
     text-shadow: 0 0 4px rgba(46, 46, 46, 0.8);
 }
@@ -316,6 +326,7 @@ span a {
 }
 .artist-card h2 {
     font-size: 20px;
+    margin-left: 20px;
 }
 .pfp.minimized {
     width: 100px;
@@ -325,7 +336,6 @@ span a {
     margin: 0;
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
-    border-radius: 10px;
     width: 300px;
     height: 350px;
     background-position: center; 

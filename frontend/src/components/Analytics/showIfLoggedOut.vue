@@ -4,14 +4,14 @@
         <div class="login-button">
             <button v-if="(!spinner)" @click="login">
                 <div class="logo">
-                    <img src="../../../public/spotify_logo.png">
+                    <img class="small-logo" src="../../../public/spotify_logo.png">
                 </div>
                 <p class="button">Continue With Spotify</p>
             </button>
             <LoadingSpinnerVue v-else />
         </div>
         <p class="description">
-            Analytics for you, by you! <span style="color: rgb(29,185,84)">SpotiFyve</span>'s analytics service pulls data from a user's Spotify account and generates detailed analytics and statistics from it!
+            Analytics for you, by you! <span style="color: rgb(29,185,84)">Hi-Fyve</span>'s analytics service pulls data from a user's Spotify account and generates detailed analytics and statistics from it!
             Users can sync their accounts with our service and view the different songs and genres that they favor, and which ones they listened more/less to recently! On top of that, a user can
             compare their listening habits within the past month to a country of their choosing to see analytics on similarities and differences between their habits and the country's habits!
         </p>
@@ -36,7 +36,7 @@ export default defineComponent({
         // login function
         const login = async () => {
             spinner.value = true;
-            await fetch('http://localhost:3000/getURL')
+            await fetch('https://spotifyve-backend.herokuapp.com/getURL')
             .then(res => {
                 return res.json();
             })

@@ -5,27 +5,27 @@
             <h1>About</h1>
             <div class="about-content">
                 <p class="text">
-                    SpotiFyve was developed by <a class="my-link" title="My LinkedIn!" href="https://www.linkedin.com/in/j4meslii/" target="_blank">James Li</a> 
+                    Hi-Fyve was developed by <a class="my-link" title="My LinkedIn!" href="https://www.linkedin.com/in/j4meslii/" target="_blank">James Li</a> 
                     as a personal project for the express purpose of viewing one's Spotify stats at a greater depth. Utilizing the Spotify API,
-                    SpotiFyve allows for a user to connect their Spotify accounts to the service and view detailed analytics about their listening habits.
+                    Hi-Fyve allows for a user to connect their Spotify accounts to the service and view detailed analytics about their listening habits.
                 </p>
                 <p class="text">
                     Upon parsing, the information is sent to the frontend for unique characteristics to be generated based off of various factors, including
                     but not limited to: <a href="/MyHiFyve" class="my-link" title="Hi-Fyve!" target="_blank"><span style="color: #e25822;">song</span> / <span style="color: rgba(255, 0, 255)">artist</span></a> characteristics, standard distribution of each individual song's statistics, and more!
                 </p>
                 <p class="text">
-                    Additionally, SpotiFyve's <a href="/Synesthesia" class="my-link" title="Synesthesia!" target="_blank"><span style="color: rgb(231, 187, 43);">Synesthesia</span></a> service allows for users to
+                    Additionally, Hi-Fyve's <a href="/Synesthesia" class="my-link" title="Synesthesia!" target="_blank"><span style="color: rgb(231, 187, 43);">Synesthesia</span></a> service allows for users to
                     generate colors from their music taste utilizing statistics from their favorite songs and artists, and displays these colors as a downloadable image board and an animated
                     media visualizer which plays a user's top songs!
                 </p>
                 <p class="text">
-                    Beyond beautification and visualization, SpotiFyve also provides detailed analytics regarding all aspects of music! Whether it be statistical analysis of a 
+                    Beyond beautification and visualization, Hi-Fyve also provides detailed analytics regarding all aspects of music! Whether it be statistical analysis of a 
                     <a href="/Analytics" title="User Analytics!" target="_blank"><span style="color: rgb(250, 100, 100)">user's listening habits and trends</span></a>
-                    or an analysis of <a href="/Worldwyde" title="Worldwyde Analytics!" target="_blank"><span style="color: rgb(29,200,120);">Worldwyde</span></a> listening habits, SpotiFyve analyzes it all!
+                    or an analysis of <a href="/Worldwyde" title="Worldwyde Analytics!" target="_blank"><span style="color: rgb(29,200,120);">Worldwyde</span></a> listening habits, Hi-Fyve analyzes it all!
                 </p>
                 <p class="text">
                     Still curious? Check out 
-                    <a class="my-link" title="SpotiFyve's Repository!" href="https://github.com/j4mesli/Spotifyve" target="_blank">SpotiFyve's repo</a>
+                    <a class="my-link" title="Hi-Fyve's Repository!" href="https://github.com/j4mesli/Hi-Fyve" target="_blank">Hi-Fyve's repo</a>
                     for more information about how the site works!
                 </p>
             </div>
@@ -58,7 +58,7 @@ export default defineComponent({
 <style scoped>
 img {
     margin: auto auto 20px;
-    transform: scale(0.75);
+    transform: scale(0.5);
 }
 a {
     text-decoration: none;

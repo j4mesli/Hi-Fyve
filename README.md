@@ -1,11 +1,11 @@
-# Spotifyve Hi-Fyve
+# Hi-Fyve Hi-Fyve
 
 A web-app built using the MEVN stack allowing for users to view, edit, and generate data about their Spotify usage. 
 - <strong>This project is LIVE and operating on a closed beta.
-- While SpotiFyve is LIVE</strong>, it is <strong>not</strong> available for public use due to our pending approval of public use from Spotify for utilization of its API. 
-  - To request to be added to view the product, please send an email to `jl11701@nyu.edu` with the subject `SpotiFyve Access Request`, containing your name and the email address your Spotify account is associated with.
+- While Hi-Fyve is LIVE</strong>, it is <strong>not</strong> available for public use due to our pending approval of public use from Spotify for utilization of its API. 
+  - To request to be added to view the product, please send an email to `jl11701@nyu.edu` with the subject `Hi-Fyve Access Request`, containing your name and the email address your Spotify account is associated with.
 
-#### Already have access, or just want to check out the site regardless of accessibility? You can check it out <a href="https://spotifyve.herokuapp.com/">here!</a>
+#### Already have access, or just want to check out the site regardless of accessibility? You can check it out <a href="https://Hi-Fyve.herokuapp.com/">here!</a>
 
 ## Navigate
 - [`About`](#about)
@@ -18,13 +18,13 @@ A web-app built using the MEVN stack allowing for users to view, edit, and gener
 
 ## **About**
 
-SpotiFyve allows for a user to view their Spotify statistics and fetch unique data generated for their account from their statistics by linking their Spotify accounts to our service. A user sends requests from the frontend to SpotiFyve's backend for specific information regarding specific inquiries `ex: user's top tracks vs user's top songs` and the backend returns an object containing all relevant information. The frontend parses this information and displays it in a digestible formation for the user to view/understand.
+Hi-Fyve allows for a user to view their Spotify statistics and fetch unique data generated for their account from their statistics by linking their Spotify accounts to our service. A user sends requests from the frontend to Hi-Fyve's backend for specific information regarding specific inquiries `ex: user's top tracks vs user's top songs` and the backend returns an object containing all relevant information. The frontend parses this information and displays it in a digestible formation for the user to view/understand.
 
-All of SpotiFyve's generated information/colors is unique to each user, and displays different sets of information/colors from each individual user's listening habits.
+All of Hi-Fyve's generated information/colors is unique to each user, and displays different sets of information/colors from each individual user's listening habits.
 
 ## **Tech Stack**
 
-SpotiFyve is built on the <strong>V.E.N.Ts</strong> tech stack of various libraries and frameworks to accomplish its use case, which includes:
+Hi-Fyve is built on the <strong>V.E.N.Ts</strong> tech stack of various libraries and frameworks to accomplish its use case, which includes:
 - Vue.js
 - Express.js
 - Node.js
@@ -32,10 +32,10 @@ SpotiFyve is built on the <strong>V.E.N.Ts</strong> tech stack of various librar
 
 ## Details
 
-Here, we will breakdown each individual feature of SpotiFyve and detail what tech was used where and how SpotiFyve utilizes it to produce a smooth listening analysis experience.
+Here, we will breakdown each individual feature of Hi-Fyve and detail what tech was used where and how Hi-Fyve utilizes it to produce a smooth listening analysis experience.
 
 ### <ins>**Hi-Fyve**</ins>
-This page was built on TypeScript in Vue3 utilizing the Composition API. The user is presented with a menu of different time-periods and a type of data analysis, primarily `top tracks v. top artists`. The user then selects the information they wish to see, which sends a `GET` request to SpotiFyve's backend, written in TypeScript in a Node.js and Express.js environment. 
+This page was built on TypeScript in Vue3 utilizing the Composition API. The user is presented with a menu of different time-periods and a type of data analysis, primarily `top tracks v. top artists`. The user then selects the information they wish to see, which sends a `GET` request to Hi-Fyve's backend, written in TypeScript in a Node.js and Express.js environment. 
 
 Upon reception of the request, the backend parses the information requested and sends another corresponding `GET` request to the Spotify API. Upon reception of data, it parses the object for relevant information and sends said object back to the frontend. Then, the frontend parses the object for relevant information and displays it in a digestible format for the user to view.
 
@@ -68,9 +68,9 @@ After the frontend receives this information, it utilizes the `p5.js` and `p5.so
 ### <ins>**Worldwyde Analytics**</ins>
 Mirroring the trend, this page was also built on TypeScript in Vue3 utilizing the Composition API. Upon page load, the user is presented with a menu that allows for them to view either the Top 50 most played tracks by country, Top 50 most Viral tracks by country, or compare up to three countries and view their differing statistics. 
 
-For the Top 50 Most Viral or Top 50 Most Played Tracks by country, the statistics and tracks are pulled using SpotiFyve's backend from Spotify's autogenerated playlists of tracks that are either the most viral or the most played in the past week, which is then sent to the frontend as an Object. This object is then parsed and displayed in a digestible format for the user to view.
+For the Top 50 Most Viral or Top 50 Most Played Tracks by country, the statistics and tracks are pulled using Hi-Fyve's backend from Spotify's autogenerated playlists of tracks that are either the most viral or the most played in the past week, which is then sent to the frontend as an Object. This object is then parsed and displayed in a digestible format for the user to view.
 
-For the Country Comparison, the frontend sends a request to SpotiFyve's backend to parse each requested track's playlist (`Top 50 Played vs Top 50 Viral`). These statistics are all statistics found within Spotify's API which includes, but is not limited to:
+For the Country Comparison, the frontend sends a request to Hi-Fyve's backend to parse each requested track's playlist (`Top 50 Played vs Top 50 Viral`). These statistics are all statistics found within Spotify's API which includes, but is not limited to:
 - Danceability
 - Energy
 - Loudness (dB LUFS)

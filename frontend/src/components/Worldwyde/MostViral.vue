@@ -25,7 +25,10 @@
         <div v-if="number_shown > 0" class="top-artists-wrapper">
             <div class="artist-card" :class="{ 'open': Number(index) === 0, 'bottom': evaluateBottomWindow(Number(index)), 'top': Number(index) === 0 }" @click="e => closeHere(e)" v-for="(track, index) in playlist" :key="track.id">
                 <div class="body-paragraph" :class="{ 'closed': Number(index) > 0 }">
-                    <h2 class="title">#{{ Number(index)+1 }}. {{ longName(track.name, Number(index)) }} <a target="_blank" :href="track.external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                    <div class="display-as-row">
+                        <img class="small-logo" src="../../../public/spotify_logo.png" />
+                        <h2 class="title">#{{ Number(index)+1 }}. {{ longName(track.name, Number(index)) }} <a target="_blank" :href="track.external_urls.spotify"><span id="hyperlink" class="material-symbols-outlined">launch</span></a></h2>
+                    </div>
                     <h4>Artist(s): 
                         <span v-for="(artist, index) in track.artists" :key="artist.id" style="flex-direction: row">
                             <a target="_blank" :href="artist.external_urls.spotify">
@@ -165,7 +168,7 @@ export default defineComponent({
                 else {
                     // loops through playlist and gets attributes of each song
                     for (let i = start; i < end; i++) {
-                        const trackFeaturesURL = 'http://localhost:3000/getTrackFeatures?id=' + props.viral_playlist[i].id + '&access_token=' + localStorage.access_token;
+                        const trackFeaturesURL = 'https://spotifyve-backend.herokuapp.com/getTrackFeatures?id=' + props.viral_playlist[i].id + '&access_token=' + localStorage.access_token;
                         const audio_features_json = await fetch(trackFeaturesURL);
                         const audio_features = await audio_features_json.json();
                         getSongDescriptors(i, audio_features);
@@ -266,6 +269,7 @@ export default defineComponent({
 }
 .artist-card h2 {
     font-size: 18px;
+    margin-left: 20px;
 }
 @media (max-width: 900px) {
     .worldwyde-component-title{

@@ -204,6 +204,7 @@
             </div>
         </div>
     </div>
+    <img class="big-logo-visualizer" src="../../../public/big_spotify_logo.png"/>
 </template>
 
 <script lang="ts">
@@ -388,7 +389,7 @@ export default defineComponent({
         refreshAccessToken((localStorage.refresh_token as string))
         .then(async () => {
             console.log('refreshed')
-            const synesthesia_url = 'http://localhost:3000/synesthesia?access_token='
+            const synesthesia_url = 'https://spotifyve-backend.herokuapp.com/synesthesia?access_token='
             + localStorage.access_token
             + '&offset=0&limit=' 
             + props.range
@@ -658,6 +659,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.big-logo-visualizer {
+    margin: 0 auto 20px;
+    width: 175px;
+    height: 60px;
+}
 .synesthesia-dropdown-label {
     position: fixed;
     top: 27%;

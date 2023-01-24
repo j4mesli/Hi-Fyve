@@ -45,7 +45,6 @@ span {
 .pfp {
     margin: 0;
     border: 1px solid #ddd;
-    border-radius: 10px;
     background-image: url('https://i.scdn.co/image/ab6761610000517402eeb5305fa7bdd9ddca42fc');
     width: 250px;
     height: 300px;

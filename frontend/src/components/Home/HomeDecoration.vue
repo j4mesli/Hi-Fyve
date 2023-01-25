@@ -13,7 +13,7 @@
         </button>
         <div class="profile" v-else-if="(hasTokens && !spinner)">
             <div class="nested">
-                <div class="logo" :style="`background-image: url(${user.images[0].url})`"></div>
+                <div class="logo" :style="`background-image: url(${image})`"></div>
             </div>
             <p>Logged in as <strong>{{ user.id }}</strong></p>
             <p class="email">({{ user.email }})</p>
@@ -44,6 +44,7 @@ export default defineComponent({
         const error = ref(null);
         const spinner = ref(false);
         const colors = ref(null);
+        const image = ref('');
         const access_token: Ref<string | null> = ref(localStorage.access_token as string ?? null);
         const refresh_token: Ref<string | null> = ref(localStorage.refresh_token as string ?? null);
         try {
@@ -83,6 +84,13 @@ export default defineComponent({
                 .then(res => { return res.json(); })
                     .then(data => {
                         user.value = data;
+                        try {
+                            image.value = data.images[0].url;
+                        }
+                        catch(err) {
+                            console.log("no user image found!");
+                            image.value = '../../../public/Spotify_Icon_RGB_Green.png';
+                        }
                         localStorage.setItem("user", JSON.stringify(user.value));
                     })
                     .catch(err => error.value = err)
@@ -147,7 +155,7 @@ export default defineComponent({
             // setTimeout(() => spotifyLogoutWindow?.close(), 1000);
         };
 
-        return { error, hasTokens, login, logout, getUserInfo, access_token, refresh_token, user, spinner, loaded };
+        return { error, hasTokens, image, login, logout, getUserInfo, access_token, refresh_token, user, spinner, loaded };
     },
 })
 </script>

@@ -399,8 +399,8 @@ export default defineComponent({
 
 <style>
 .small-logo {
-    max-height: 20px;
-    max-width: 20px;
+    max-height: 24px;
+    max-width: 24px;
 }
 .worldwyde-swap-comparison-type {
     cursor: pointer;

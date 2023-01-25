@@ -22,7 +22,7 @@ export default defineComponent({
 <style scoped>
 h2.title {
     padding: 0;
-    margin: 0 0 -25px 0;
+    margin-left: 20px;
 }
 h4 {
     margin: -25px 0;
@@ -50,7 +50,7 @@ span {
     border: 1px solid #ddd;
     background-image: url('https://i.scdn.co/image/ab6761610000517402eeb5305fa7bdd9ddca42fc');
     width: 250px;
-    height: 300px;
+    height: 250px;
     background-position: center; 
     background-repeat: no-repeat;
     background-size: 100% 100%;

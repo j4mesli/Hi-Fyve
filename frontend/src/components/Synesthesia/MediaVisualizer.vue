@@ -204,7 +204,6 @@
             </div>
         </div>
     </div>
-    <img class="big-logo-visualizer" src="../../../public/big_spotify_logo.png"/>
 </template>
 
 <script lang="ts">

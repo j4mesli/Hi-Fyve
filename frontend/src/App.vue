@@ -1,16 +1,19 @@
 <template>
   <LogoAndNavVue />
   <router-view/>
+  <PageFooter />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import LogoAndNavVue from './components/LogoAndNav.vue';
+import PageFooter from './PageFooter.vue';
 import { handleLogIn } from './components/functions/handleLogIn';
 
 export default defineComponent({
   components: {
     LogoAndNavVue,
+    PageFooter,
   },
   setup() {
     if (localStorage.access_token && localStorage.refresh_token) {

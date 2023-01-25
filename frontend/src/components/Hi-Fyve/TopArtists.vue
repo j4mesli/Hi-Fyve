@@ -392,7 +392,7 @@ export default defineComponent({
     padding: 20px auto;
     box-shadow: 0 0 8px rgba(46, 46, 46, 0.8);
     width: 300px;
-    height: 350px;
+    height: 300px;
     background-position: center; 
     background-repeat: no-repeat;
     background-size: 100% 100%;

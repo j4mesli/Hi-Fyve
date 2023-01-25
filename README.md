@@ -11,7 +11,7 @@ A web-app built using the MEVN stack allowing for users to view, edit, and gener
 - [`About`](#about)
 - [`Tech Stack`](#tech-stack)
 - [`Details`](#details)
-  - [`Hi-Fyve`](#hi-fyve)
+  - [`Hi-Fyve`](#hi-fyve-analytics)
   - [`User Analytics`](#user-analytics)
   - [`Synesthesia`](#synesthesia)
   - [`Worldwyde Analytics`](#worldwyde-analytics)
@@ -34,7 +34,7 @@ Hi-Fyve is built on the <strong>V.E.N.Ts</strong> tech stack of various librarie
 
 Here, we will breakdown each individual feature of Hi-Fyve and detail what tech was used where and how Hi-Fyve utilizes it to produce a smooth listening analysis experience.
 
-### <ins>**Hi-Fyve**</ins>
+### <ins>**Hi-Fyve Analytics**</ins>
 This page was built on TypeScript in Vue3 utilizing the Composition API. The user is presented with a menu of different time-periods and a type of data analysis, primarily `top tracks v. top artists`. The user then selects the information they wish to see, which sends a `GET` request to Hi-Fyve's backend, written in TypeScript in a Node.js and Express.js environment. 
 
 Upon reception of the request, the backend parses the information requested and sends another corresponding `GET` request to the Spotify API. Upon reception of data, it parses the object for relevant information and sends said object back to the frontend. Then, the frontend parses the object for relevant information and displays it in a digestible format for the user to view.

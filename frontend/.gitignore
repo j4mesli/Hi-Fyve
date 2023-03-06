@@ -1,0 +1,11 @@
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# p5
+/public/p5.js
+/public/p5.sound.js
+
+# dist
+/dist

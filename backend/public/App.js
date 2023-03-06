@@ -26,14 +26,9 @@ import { rgbToHex } from "./functions/RGBtoHex.js";
 const colors = JSON.parse(readFileSync(path.join(__dirname, "/src/json/genre-color.json")).toString());
 const colorToName = JSON.parse(readFileSync(path.join(__dirname, "/src/json/color-name.json")).toString());
 const country_playlists = JSON.parse(readFileSync(path.join(__dirname, "/src/json/country-playlists.json")).toString());
-const genre_colors = JSON.parse(readFileSync(path.join(__dirname, "/src/json/genre-color.json")).toString());
 // init server
 const app = express();
-const corsOptions = {
-  origin: '*',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
-}
-app.use(cors(corsOptions));
+app.use(cors());
 const port = process.env.PORT || 3000;
 app.listen(process.env.PORT || 5000);
 // middleware
@@ -52,8 +47,6 @@ const spotifyApi = new spotifyWebApi(creds);
 // routes
 //// gets authorization URL for frontend to open
 app.get('/getURL', (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     let obj = {};
     obj = Object.assign({ 'url': spotifyApi.createAuthorizeURL(scopes, state) }, obj);
     res.send(obj);
@@ -221,7 +214,9 @@ app.get('/colors', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     else {
         try {
-            res.send(genre_colors);
+            const location = path.join(__dirname, '..', 'json', 'genre-color.json');
+            res.header("Content-Type", 'application/json');
+            res.sendFile(location);
         }
         catch (err) {
             const error = {
@@ -240,7 +235,9 @@ app.get('/nameForColor', (req, res) => __awaiter(void 0, void 0, void 0, functio
     }
     else {
         try {
-            res.send(genre_colors);
+            const location = path.join(__dirname, '..', 'json', 'color-name.json');
+            res.header("Content-Type", 'application/json');
+            res.sendFile(location);
         }
         catch (err) {
             const error = {

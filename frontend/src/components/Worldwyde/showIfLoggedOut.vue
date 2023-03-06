@@ -116,8 +116,8 @@ button {
     border-radius: 20px;
     border: 1px solid #f3f3f3;
     transition: .1s ease-in-out;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: black;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #bbb;
     margin-top: 40px;
 }
 button:hover {

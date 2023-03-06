@@ -5,7 +5,8 @@
         <div class="analytics-content" v-else>
             <div class="worldwyde-comparison-buttons">
                 <button @click="swapDisplayOfStatistics" :class="{ 'comparison-active': !showComparisonComponent }"><h3>View Your Metrics</h3></button>
-                <button @click="swapDisplayOfStatistics" :class="{ 'comparison-active': showComparisonComponent }"><h3>Compare Your Metrics</h3></button>
+                <!-- <button @click="swapDisplayOfStatistics" :class="{ 'comparison-active': !showComparisonComponent }"><h3>View Your Metrics</h3></button> -->
+                <!-- <button @click="swapDisplayOfStatistics" :class="{ 'comparison-active': showComparisonComponent }"><h3>Compare Your Metrics</h3></button> -->
             </div>
             <div class="comparison-component-statistics display-as-column" v-if="!showComparisonComponent">
                 <h2 class="comparison-component-title">Your Listening Habits</h2>
@@ -17,7 +18,7 @@
                     </ul>
                 </div>
             </div>
-            <div class="comparison-component-statistics display-as-column" v-else>
+            <!-- <div class="comparison-component-statistics display-as-column" v-else>
                 <div class="dropdown-container">
                     <h2 class="comparison-component-title">Compare Your Listening Habits</h2>
                     <div v-if="!hideDropdown && !loadingComparison" class="dropdown-wrapper" :style="{ 
@@ -69,7 +70,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>

@@ -12,8 +12,7 @@
         </div>
         <p class="description">
             Analytics for you, by you! <span style="color: rgb(29,185,84)">Hi-Fyve</span>'s analytics service pulls data from a user's Spotify account and generates detailed analytics and statistics from it!
-            Users can sync their accounts with our service and view the different songs and genres that they favor, and which ones they listened more/less to recently! On top of that, a user can
-            compare their listening habits within the past month to a country of their choosing to see analytics on similarities and differences between their habits and the country's habits!
+            Users can sync their accounts with our service and view the different songs and genres that they favor, and which ones they listened more/less to recently!
         </p>
         <demoAnalyticsVue v-if="showDemo" />
         <h3 @click="showDemo = !showDemo" class="show-hide-demo" v-if="!showDemo">Click Here to See What Our Analytics 📈 Can Show You!!</h3>
@@ -116,8 +115,8 @@ button {
     border-radius: 20px;
     border: 1px solid #f3f3f3;
     transition: .1s ease-in-out;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: black;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #bbb;
     margin-top: 40px;
 }
 button:hover {

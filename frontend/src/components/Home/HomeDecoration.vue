@@ -12,8 +12,10 @@
             <p class="button">Connect With Spotify</p>
         </button>
         <div class="profile" v-else-if="(hasTokens && !spinner)">
+            <p>Image: </p>
+            <p>{{ image !== '' ? image : '../../../public/Spotify_Icon_RGB_Green.png' }}</p>
             <div class="nested">
-                <div class="logo" :style="`background-image: url(${image})`"></div>
+                <div class="logo" :style="`background-image: url(${image !== '' ? image : '../../../public/Spotify_Icon_RGB_Green.png'})`"></div>
             </div>
             <p>Logged in as <strong>{{ user.id }}</strong></p>
             <p class="email">({{ user.email }})</p>
@@ -44,7 +46,7 @@ export default defineComponent({
         const error = ref(null);
         const spinner = ref(false);
         const colors = ref(null);
-        const image = ref('');
+        const image = ref(localStorage.getItem('user') !== null ? JSON.parse(localStorage.getItem('user') as string).images[0].url : '../../../public/Spotify_Icon_RGB_Green.png');
         const access_token: Ref<string | null> = ref(localStorage.access_token as string ?? null);
         const refresh_token: Ref<string | null> = ref(localStorage.refresh_token as string ?? null);
         try {
@@ -140,6 +142,23 @@ export default defineComponent({
                     spinner.value = false;
                 }
             }
+            
+            // sets user's image on mount
+            try {
+                console.log('here');
+                const userObjString = localStorage.getItem('user');
+                if (!userObjString) {
+                    image.value = '../../../public/Spotify_Icon_RGB_Green.png';
+                }
+                else {
+                    const userObj: { images: [{ url: string }] } = JSON.parse(userObjString);
+                    image.value = userObj.images[0].url;
+                }
+            }
+            catch(err) {
+                console.log('here error');
+                image.value = '../../../public/Spotify_Icon_RGB_Green.png';
+            }
         });
 
         // logout user
@@ -154,6 +173,23 @@ export default defineComponent({
             // const spotifyLogoutWindow = window.open('https://accounts.spotify.com/en/logout', 'Spotify Logout', 'width=700,height=500,top=40,left=40')                                                                                                
             // setTimeout(() => spotifyLogoutWindow?.close(), 1000);
         };
+        
+        // sets user's image on mount
+        try {
+            console.log('there');
+            const userObjString = localStorage.getItem('user');
+            if (!userObjString) {
+                image.value = '../../../public/Spotify_Icon_RGB_Green.png';
+            }
+            else {
+                const userObj: { images: [{ url: string }] } = JSON.parse(userObjString);
+                image.value = userObj.images[0].url;
+            }
+        }
+        catch(err) {
+            console.log('there error');
+            image.value = '../../../public/Spotify_Icon_RGB_Green.png';
+        }
 
         return { error, hasTokens, image, login, logout, getUserInfo, access_token, refresh_token, user, spinner, loaded };
     },

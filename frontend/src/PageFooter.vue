@@ -18,8 +18,8 @@ export default defineComponent({
 <style scoped>
 .big-logo-visualizer {
     margin: 0 auto 20px;
-    width: 235px;
-    height: 72px;
+    width: 175px;
+    height: 60px;
 }
 .footer {
     margin: 20px auto;

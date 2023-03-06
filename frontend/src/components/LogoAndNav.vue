@@ -9,7 +9,7 @@
             <router-link to="/MyHiFyve">Hi-Fyve!</router-link>
             <router-link to="/Analytics">Analytics</router-link>
             <router-link to="/Synesthesia">Synesthesia</router-link>
-            <router-link to="/Worldwyde">Worldwyde</router-link>
+            <!-- <router-link to="/Worldwyde">Worldwyde</router-link> -->
         </nav>
         <span v-else class="material-symbols-outlined" @click="updateMenu" :class="{ active: hideShowMenu }">{{menuOpenClose}}</span>
         <span v-if="(width > 1250)" class="material-symbols-outlined" @click="updateMenu" :class="{ active: hideShowMenu }">{{navOpenClose}}</span>
@@ -21,7 +21,7 @@
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/MyHiFyve"><li>Hi-Fyve!</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/Analytics"><li>Analytics</li></router-link></div>
             <div class="menuEntry"><router-link style="text-decoration: none;" to="/Synesthesia"><li>Synesthesia</li></router-link></div>
-            <div class="menuEntry"><router-link style="text-decoration: none;" to="/Worldwyde"><li>Worldwyde</li></router-link></div>
+            <!-- <div class="menuEntry"><router-link style="text-decoration: none;" to="/Worldwyde"><li>Worldwyde</li></router-link></div> -->
         </ul>
     </div>
 </template>

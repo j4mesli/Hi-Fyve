@@ -1,6 +1,6 @@
 # Hi-Fyve
 
-A web-app built using the VENTS stack allowing for users to view, edit, and generate data about their Spotify usage. 
+A web-app built using the V.E.N.TS (Vue, Express, Node.js, TypeScript) stack allowing for users to view, edit, and generate data about their Spotify usage. 
 - <strong>Hi-Fyve is now approved for public use, and can be accessed <a href="https://hi-fyve.onrender.com">here</a>!</strong>
 
 ## Navigate

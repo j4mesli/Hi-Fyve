@@ -2,8 +2,7 @@
 
 A web-app built using the VENTS stack allowing for users to view, edit, and generate data about their Spotify usage. 
 - <strong>This project is LIVE and operating on a closed beta.
-- While Hi-Fyve is LIVE</strong>, it is <strong>not</strong> available for public use due to our pending approval of public use from Spotify for utilization of its API. 
-  - To request to be added to view the product, please send an email to `jl11701@nyu.edu` with the subject `Hi-Fyve Access Request`, containing your name and the email address your Spotify account is associated with.
+- Hi-Fyve is now approved for public use, and can be accessed <a href="https://hi-fyve.onrender.com">here</a>!
 
 #### Already have access, or just want to check out the site regardless of accessibility? You can check it out <a href="https://hi-fyve.onrender.com">here!</a>
 

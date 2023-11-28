@@ -278,8 +278,8 @@ export default defineComponent({
         const fetchFlags = async () => {
             await Promise.all(countries.value.map(async country => {
                 try {
-                    const countryName = countryData.lookup.countries({name: country.country})[0];
-                    const url = 'https://flagsapi.com/png/' + countryName + '/flat/64.png';
+                    const countryISOCode = countryData.lookup.countries({name: country.country})[0].alpha2;
+                    const url = 'https://flagsapi.com/png/' + countryISOCode + '/flat/64.png';
                     const fetchBlob = await fetch(url);
                     const parseBlob = await fetchBlob.blob();
                     const reader = new FileReader();

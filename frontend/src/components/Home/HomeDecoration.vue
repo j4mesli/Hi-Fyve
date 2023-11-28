@@ -18,7 +18,6 @@
                 <div class="logo" :style="`background-image: url(${image !== '' ? image : '../../../public/Spotify_Icon_RGB_Green.png'})`"></div>
             </div>
             <p>Logged in as <strong>{{ user.id }}</strong></p>
-            <p class="email">({{ user.email }})</p>
             <button @click="$router.push({ name: 'MyHiFyve' })"><h3>Hi-Fyve!</h3></button>
             <div class="nested">
                 <p class="signout">Not you? <br><a @click="logout">Log out!</a></p>

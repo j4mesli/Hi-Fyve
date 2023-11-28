@@ -76,6 +76,7 @@ import { attributeToColor } from '../functions/attributeToColor';
 import { fillInTheBlank } from '../functions/fillInTheBlank';
 import { shuffleArray } from '../functions/shuffleArray';
 import { millisecondsToMinutesAndSeconds } from '../functions/millisecondsToMinutesAndSeconds';
+var countryData = require('country-data');
 
 export default defineComponent({
     emits: ['goHome'],
@@ -276,16 +277,22 @@ export default defineComponent({
         // get flags from each country
         const fetchFlags = async () => {
             await Promise.all(countries.value.map(async country => {
-                const url = 'https://countryflagsapi.com/png/' + country.country.slice(0,1).toLowerCase() + country.country.slice(1);
-                const fetchBlob = await fetch(url);
-                const parseBlob = await fetchBlob.blob();
-                const reader = new FileReader();
-                reader.readAsDataURL(parseBlob); 
-                reader.onloadend = () => {
-                    const string = (reader.result as string);
-                    if (country.country !== 'Global') country_flags.value[country.country as string] = { country: country.country, flag: string };
-                    else country_flags.value[country.country as string] = { country: country.country, flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_the_United_Nations.png/800px-Flag_of_the_United_Nations.png?20221118140253" };
-                };
+                try {
+                    const countryName = countryData.lookup.countries({name: country.country})[0];
+                    const url = 'https://flagsapi.com/png/' + countryName + '/flat/64.png';
+                    const fetchBlob = await fetch(url);
+                    const parseBlob = await fetchBlob.blob();
+                    const reader = new FileReader();
+                    reader.readAsDataURL(parseBlob); 
+                    reader.onloadend = () => {
+                        const string = (reader.result as string);
+                        if (country.country !== 'Global') country_flags.value[country.country as string] = { country: country.country, flag: string };
+                        else country_flags.value[country.country as string] = { country: country.country, flag: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_the_United_Nations.png/800px-Flag_of_the_United_Nations.png?20221118140253" };
+                    };
+                }
+                catch(err: unknown) {
+                    console.error((err as Error).message);
+                }
             }));
         }
 

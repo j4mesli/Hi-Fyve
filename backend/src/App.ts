@@ -414,7 +414,13 @@ app.get('/country_playlists', async (req, res) => {
 app.get('/tracks_from_playlist', async (req, res) => {
     if (req.query.id && req.query.access_token) {
         const firstres = res;
-        const playlist_url = 'https://api.spotify.com/v1/playlists/' + req.query.id as string;
+        const rawId = req.query.id as string;
+        // Allow only expected playlist ID characters to avoid abusing the path segment.
+        const playlistIdPattern = /^[A-Za-z0-9_-]+$/;
+        if (!playlistIdPattern.test(rawId)) {
+            return res.status(400).send({ "code": "400", "error": "Invalid playlist id format" });
+        }
+        const playlist_url = 'https://api.spotify.com/v1/playlists/' + rawId;
         const headers = { 
             'Content-Type': 'application/json', 
             'Accept': 'application/json',
